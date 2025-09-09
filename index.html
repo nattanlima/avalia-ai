@@ -5,103 +5,152 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Prisme Avalia Ai!</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            overflow: hidden; /* Evita scrollbars durante as transições */
         }
-        /* Cor primária da Prisme */
-        .bg-prisme-primary { background-color: #7F56D9; }
-        .hover\:bg-prisme-primary-dark:hover { background-color: #6941C6; }
-        .text-prisme-primary { color: #7F56D9; }
-        .hover\:text-prisme-primary-dark:hover { color: #6941C6; }
-        .border-prisme-primary { border-color: #7F56D9; }
-        .ring-prisme-primary { --tw-ring-color: #7F56D9; }
+        /* Nova cor primária da Prisme (Verde) */
+        .bg-prisme-primary { background-color: #10B981; }
+        .hover\:bg-prisme-primary-dark:hover { background-color: #059669; }
+        .text-prisme-primary { color: #10B981; }
+        .hover\:text-prisme-primary-dark:hover { color: #059669; }
+        .border-prisme-primary { border-color: #10B981; }
+        .ring-prisme-primary { --tw-ring-color: #10B981; }
+
+        /* Estilos para transições de formulário */
+        .form-step {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+        .form-step.hidden-step {
+            opacity: 0;
+            transform: translateX(100%);
+            position: absolute;
+            width: 100%;
+        }
+       .form-step.back-step {
+            opacity: 0;
+            transform: translateX(-100%);
+            position: absolute;
+            width: 100%;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
-    <div class="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-        <div class="sm:mx-auto sm:w-full sm:max-w-md">
-            <img class="mx-auto h-12 w-auto" src="https://raw.githubusercontent.com/nattanlima/avalia-ai/main/icons/logo.png" alt="Prisme Logo">
-            <h2 id="form-title" class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                Acesse sua conta
-            </h2>
+    <div class="min-h-screen flex">
+        <!-- Coluna Esquerda (Branding) - Visível em telas médias e maiores -->
+        <div class="hidden lg:flex w-1/2 bg-prisme-primary items-center justify-center p-12 text-white flex-col relative overflow-hidden">
+             <div class="absolute bg-green-500/20 rounded-full w-96 h-96 -top-20 -left-16"></div>
+             <div class="absolute bg-green-500/20 rounded-full w-[500px] h-[500px] -bottom-32 -right-24"></div>
+            <h1 class="text-4xl font-bold mb-4 z-10">Transforme opiniões em crescimento.</h1>
+            <p class="text-lg text-green-100 z-10">A forma mais simples de entender o que seus clientes realmente pensam.</p>
         </div>
 
-        <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-            <div class="bg-white py-8 px-4 shadow-lg sm:rounded-lg sm:px-10">
-                
-                <!-- Formulário de Login -->
-                <form id="login-form" class="space-y-6" action="#" method="POST">
-                    <div>
-                        <label for="login-email" class="block text-sm font-medium text-gray-700"> Email </label>
-                        <div class="mt-1">
-                            <input id="login-email" name="email" type="email" autocomplete="email" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
+        <!-- Coluna Direita (Formulário) -->
+        <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12">
+            <div class="w-full max-w-md">
+                <div class="text-center mb-8">
+                    <img class="mx-auto h-28 w-auto" src="https://raw.githubusercontent.com/nattanlima/avalia-ai/main/icons/logo.png" alt="Prisme Logo">
+                    <h1 class="text-4xl font-bold text-gray-800 mt-4">Avalia Ai!</h1>
+                    <p class="text-gray-500">Sua opinião transforma negócios.</p>
+                    <h2 id="form-title" class="mt-8 text-2xl font-bold text-gray-700 transition-opacity duration-300">
+                        Acesse sua conta
+                    </h2>
+                </div>
+
+                <div class="relative overflow-hidden" style="min-height: 350px;">
+                    <!-- Formulário de Login -->
+                    <form id="login-form" class="space-y-6 form-step" action="#" method="POST">
+                        <div>
+                            <label for="login-email" class="block text-sm font-medium text-gray-700"> Email </label>
+                            <div class="mt-1">
+                                <input id="login-email" name="email" type="email" autocomplete="email" required class="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
+                            </div>
                         </div>
-                    </div>
 
-                    <div>
-                        <label for="login-password" class="block text-sm font-medium text-gray-700"> Senha </label>
-                        <div class="mt-1">
-                            <input id="login-password" name="password" type="password" autocomplete="current-password" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
+                        <div>
+                            <label for="login-password" class="block text-sm font-medium text-gray-700"> Senha </label>
+                            <div class="mt-1">
+                                <input id="login-password" name="password" type="password" autocomplete="current-password" required class="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
+                            </div>
                         </div>
-                    </div>
 
-                    <div>
-                        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-prisme-primary hover:bg-prisme-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-prisme-primary">
-                            Entrar
-                        </button>
-                    </div>
-                </form>
-                
-                <!-- Formulário de Cadastro -->
-                <form id="register-form" class="space-y-6 hidden" action="#" method="POST">
-                    <input type="hidden" name="remember" value="true">
-                    <!-- Campos do formulário de cadastro -->
-                    <div>
-                        <label for="register-name" class="block text-sm font-medium text-gray-700">Seu nome</label>
-                        <input id="register-name" type="text" required class="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
-                    </div>
-                     <div>
-                        <label for="register-whatsapp" class="block text-sm font-medium text-gray-700">Seu WhatsApp</label>
-                        <input id="register-whatsapp" type="tel" required placeholder="(99) 99999-9999" class="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
-                    </div>
-                     <div>
-                        <label for="register-company-name" class="block text-sm font-medium text-gray-700">Nome da Empresa</label>
-                        <input id="register-company-name" type="text" required class="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
-                    </div>
-                    <div>
-                        <label for="register-segment" class="block text-sm font-medium text-gray-700">Seguimento</label>
-                        <input id="register-segment" type="text" required class="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
-                    </div>
-                     <div>
-                        <label for="register-cnpj" class="block text-sm font-medium text-gray-700">CNPJ (apenas números)</label>
-                        <input id="register-cnpj" type="text" pattern="\d*" title="Apenas números" required class="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
-                    </div>
-                    <div>
-                        <label for="register-cpf" class="block text-sm font-medium text-gray-700">Seu CPF (apenas números)</label>
-                        <input id="register-cpf" type="text" pattern="\d*" title="Apenas números" required class="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
-                    </div>
-                    <div>
-                        <label for="register-email" class="block text-sm font-medium text-gray-700">Email</label>
-                        <input id="register-email" type="email" required class="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
-                    </div>
-                    <div>
-                        <label for="register-password" class="block text-sm font-medium text-gray-700">Crie uma senha</label>
-                        <input id="register-password" type="password" required minlength="6" class="mt-1 appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
-                    </div>
-                    <div>
-                        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-prisme-primary hover:bg-prisme-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-prisme-primary">
-                            Criar conta
-                        </button>
-                    </div>
-                </form>
+                        <div>
+                            <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-prisme-primary hover:bg-prisme-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-prisme-primary transition-transform transform hover:scale-105">
+                                Entrar
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- Formulário de Cadastro (Multi-Step) -->
+                    <form id="register-form" class="space-y-6 form-step hidden-step" action="#" method="POST">
+                        <!-- Passo 1: Dados Pessoais -->
+                        <div id="step-1" class="form-step space-y-6">
+                            <div>
+                                <label for="register-name" class="block text-sm font-medium text-gray-700">Seu nome</label>
+                                <input id="register-name" type="text" required class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
+                            </div>
+                            <div>
+                                <label for="register-whatsapp" class="block text-sm font-medium text-gray-700">Seu WhatsApp</label>
+                                <input id="register-whatsapp" type="tel" required placeholder="(99) 99999-9999" class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
+                            </div>
+                            <button type="button" id="next-step-1" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-prisme-primary hover:bg-prisme-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-prisme-primary transition-transform transform hover:scale-105">
+                                Continuar
+                            </button>
+                        </div>
+                        
+                        <!-- Passo 2: Dados da Empresa -->
+                        <div id="step-2" class="form-step space-y-6 hidden-step">
+                             <div>
+                                <label for="register-company-name" class="block text-sm font-medium text-gray-700">Nome da Empresa</label>
+                                <input id="register-company-name" type="text" required class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
+                            </div>
+                            <div>
+                                <label for="register-segment" class="block text-sm font-medium text-gray-700">Seguimento</label>
+                                <input id="register-segment" type="text" required class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
+                            </div>
+                             <div>
+                                <label for="register-cnpj" class="block text-sm font-medium text-gray-700">CNPJ (apenas números)</label>
+                                <input id="register-cnpj" type="text" pattern="\d*" title="Apenas números" required class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
+                            </div>
+                            <div>
+                                <label for="register-cpf" class="block text-sm font-medium text-gray-700">Seu CPF (apenas números)</label>
+                                <input id="register-cpf" type="text" pattern="\d*" title="Apenas números" required class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
+                            </div>
+                            <div class="flex gap-4">
+                               <button type="button" id="back-step-2" class="w-1/2 flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">Voltar</button>
+                                <button type="button" id="next-step-2" class="w-1/2 flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-prisme-primary hover:bg-prisme-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-prisme-primary">Continuar</button>
+                            </div>
+                        </div>
 
-                <div id="message-area" class="mt-4 text-sm text-center"></div>
+                        <!-- Passo 3: Credenciais -->
+                        <div id="step-3" class="form-step space-y-6 hidden-step">
+                            <div>
+                                <label for="register-email" class="block text-sm font-medium text-gray-700">Email</label>
+                                <input id="register-email" type="email" required class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
+                            </div>
+                            <div>
+                                <label for="register-password" class="block text-sm font-medium text-gray-700">Crie uma senha</label>
+                                <input id="register-password" type="password" required minlength="6" class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
+                            </div>
+                            <div>
+                                <label for="confirm-password" class="block text-sm font-medium text-gray-700">Confirme sua senha</label>
+                                <input id="confirm-password" type="password" required minlength="6" class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
+                            </div>
+                            <div class="flex gap-4">
+                                <button type="button" id="back-step-3" class="w-1/2 flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">Voltar</button>
+                                <button type="submit" class="w-1/2 flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-prisme-primary hover:bg-prisme-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-prisme-primary">Criar conta</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
 
-                <div class="mt-6 text-center text-sm">
-                    <a href="#" id="toggle-form" class="font-medium text-prisme-primary hover:text-prisme-primary-dark">
-                        Não tem uma conta? Crie gratuitamente
+                <div id="message-area" class="mt-4 text-sm text-center transition-opacity duration-300"></div>
+
+                <div class="mt-6 text-center">
+                    <a href="#" id="toggle-form" class="inline-block w-full py-3 px-4 font-medium text-center text-prisme-primary rounded-lg hover:bg-green-50 transition duration-150 ease-in-out">
+                        Não tem uma conta? <strong>Crie gratuitamente</strong>
                     </a>
                 </div>
             </div>
@@ -120,6 +169,92 @@
         const formTitle = document.getElementById('form-title');
         const messageArea = document.getElementById('message-area');
 
+        // --- Validação para campos numéricos ---
+        const numericInputs = [
+            document.getElementById('register-whatsapp'),
+            document.getElementById('register-cnpj'),
+            document.getElementById('register-cpf')
+        ];
+
+        numericInputs.forEach(input => {
+            if (input) {
+                input.addEventListener('input', () => {
+                    // Remove qualquer caractere que não seja um número
+                    input.value = input.value.replace(/[^0-9]/g, '');
+                });
+            }
+        });
+
+        // --- Lógica do formulário de múltiplos passos ---
+        const steps = [document.getElementById('step-1'), document.getElementById('step-2'), document.getElementById('step-3')];
+        const nextButtons = [document.getElementById('next-step-1'), document.getElementById('next-step-2')];
+        const backButtons = [document.getElementById('back-step-2'), document.getElementById('back-step-3')];
+        let currentStep = 0;
+
+        function showStep(stepIndex, direction = 'forward') {
+            steps.forEach((step, index) => {
+                const isTarget = index === stepIndex;
+                if(isTarget) {
+                    step.classList.remove('hidden-step', 'back-step');
+                } else {
+                    if(direction === 'forward' && index < stepIndex) {
+                        step.classList.add('back-step');
+                        step.classList.remove('hidden-step');
+                    } else if (direction === 'backward' && index > stepIndex) {
+                        step.classList.add('hidden-step');
+                        step.classList.remove('back-step');
+                    } else {
+                        // For other cases, ensure they are correctly positioned off-screen
+                        if (index > stepIndex) {
+                            step.classList.add('hidden-step');
+                            step.classList.remove('back-step');
+                        } else {
+                             step.classList.add('back-step');
+                             step.classList.remove('hidden-step');
+                        }
+                    }
+                }
+            });
+            currentStep = stepIndex;
+        }
+        
+        function validateStep(stepIndex) {
+            const inputs = steps[stepIndex].querySelectorAll('input[required]');
+            for (const input of inputs) {
+                if (!input.value.trim()) {
+                    showMessage(`O campo "${input.previousElementSibling.textContent.trim()}" é obrigatório.`, true);
+                    input.focus();
+                    return false;
+                }
+            }
+            if (stepIndex === 2) { // Último passo, verificar senhas
+                 const password = document.getElementById('register-password').value;
+                 const confirmPassword = document.getElementById('confirm-password').value;
+                 if (password !== confirmPassword) {
+                     showMessage('As senhas não coincidem.', true);
+                     return false;
+                 }
+            }
+            return true;
+        }
+
+        nextButtons.forEach((button, index) => {
+            button.addEventListener('click', () => {
+                if (validateStep(index)) {
+                    showMessage(''); // Limpa mensagens de erro
+                    showStep(index + 1, 'forward');
+                }
+            });
+        });
+        
+        backButtons.forEach((button, index) => {
+             button.addEventListener('click', () => {
+                showMessage(''); // Limpa mensagens de erro
+                showStep(index, 'backward');
+            });
+        });
+
+
         function showMessage(message, isError = false) {
             messageArea.textContent = message;
             messageArea.className = isError 
@@ -130,21 +265,29 @@
         toggleLink.addEventListener('click', (e) => {
             e.preventDefault();
             messageArea.textContent = '';
-            if (loginForm.classList.contains('hidden')) {
-                loginForm.classList.remove('hidden');
-                registerForm.classList.add('hidden');
-                formTitle.textContent = 'Acesse sua conta';
-                toggleLink.textContent = 'Não tem uma conta? Crie gratuitamente';
-            } else {
-                loginForm.classList.add('hidden');
-                registerForm.classList.remove('hidden');
+            
+            const isLoginVisible = !loginForm.classList.contains('back-step') && !loginForm.classList.contains('hidden-step');
+
+            if (isLoginVisible) {
+                // Esconde Login, Mostra Cadastro
+                loginForm.classList.add('back-step');
+                registerForm.classList.remove('hidden-step');
+                showStep(0); // Garante que o cadastro comece do passo 1
                 formTitle.textContent = 'Crie sua conta';
-                toggleLink.textContent = 'Já tem uma conta? Acesse aqui';
+                toggleLink.innerHTML = 'Já tem uma conta? <strong>Acesse aqui</strong>';
+            } else {
+                // Esconde Cadastro, Mostra Login
+                registerForm.classList.add('hidden-step');
+                loginForm.classList.remove('back-step');
+                formTitle.textContent = 'Acesse sua conta';
+                toggleLink.innerHTML = 'Não tem uma conta? <strong>Crie gratuitamente</strong>';
             }
         });
 
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!validateStep(2)) return;
+
             const name = document.getElementById('register-name').value;
             const whatsapp = document.getElementById('register-whatsapp').value;
             const companyName = document.getElementById('register-company-name').value;
@@ -171,6 +314,10 @@
             localStorage.setItem('pendingCompanyData', JSON.stringify(companyData));
 
             showMessage('Cadastro realizado! Verifique seu email para confirmar a conta e depois faça o login.');
+            
+            setTimeout(() => {
+                 toggleLink.click();
+            }, 5000);
         });
 
         loginForm.addEventListener('submit', async (e) => {
@@ -207,6 +354,4 @@
     </script>
 </body>
 </html>
-
-
 
