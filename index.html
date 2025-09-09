@@ -254,6 +254,19 @@
             });
         });
 
+        // --- Manipula a tecla Enter para avançar nos passos ---
+        registerForm.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Impede o envio padrão do formulário
+                if (currentStep < 2) { // Se não estiver no último passo
+                    nextButtons[currentStep].click(); // Simula o clique no botão "Continuar"
+                } else {
+                    // No último passo, simula o clique no botão de submit final
+                    registerForm.querySelector('button[type="submit"]').click();
+                }
+            }
+        });
+
 
         function showMessage(message, isError = false) {
             messageArea.textContent = message;
