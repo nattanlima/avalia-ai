@@ -17,15 +17,25 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 80px;
-            height: 80px;
+            width: 64px; /* Tamanho menor para telas pequenas */
+            height: 64px;
             border-radius: 12px;
             border: 2px solid #e5e7eb; /* gray-200 */
             background-color: white;
             cursor: pointer;
             transition: all 0.2s ease-in-out;
-            font-size: 2.5rem; /* Tamanho do emoji */
+            font-size: 2.25rem; /* Tamanho do emoji */
         }
+        
+        /* Aumenta o botão em telas maiores (sm: 640px para cima) */
+        @media (min-width: 640px) {
+            .rating-btn {
+                width: 80px;
+                height: 80px;
+                font-size: 2.5rem;
+            }
+        }
+
         .rating-btn:hover {
             transform: translateY(-5px);
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
@@ -38,67 +48,77 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4">
 
-    <div id="evaluation-card" class="w-full max-w-lg p-8 space-y-6 bg-white rounded-xl shadow-lg text-center">
-        <!-- Loader -->
-        <div id="loader">
-            <svg class="animate-spin h-8 w-8 text-indigo-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <p class="mt-4 text-gray-600">Carregando...</p>
-        </div>
+    <main class="flex-grow flex items-center justify-center w-full">
+        <div id="evaluation-card" class="w-full max-w-lg p-6 sm:p-8 space-y-6 bg-white rounded-xl shadow-lg text-center mx-auto">
+            <!-- Loader -->
+            <div id="loader">
+                <svg class="animate-spin h-8 w-8 text-indigo-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <p class="mt-4 text-gray-600">Carregando...</p>
+            </div>
 
-        <!-- Conteúdo da Avaliação (inicialmente oculto) -->
-        <div id="evaluation-content" class="hidden">
-            <h1 class="text-xl md:text-2xl font-bold text-gray-800">Avalie o atendimento de</h1>
-            <p id="company-name" class="text-2xl md:text-3xl font-extrabold text-indigo-600 mt-2">...</p>
-            <p class="text-gray-600 mt-4">Sua opinião é muito importante para nós. Por favor, toque em uma das opções abaixo.</p>
-            
-            <div id="rating-buttons" class="flex justify-center items-start flex-wrap gap-3 sm:gap-4 mt-8">
-                 <div class="text-center w-20">
-                    <button class="rating-btn mx-auto" data-value="1">😠</button>
-                    <p class="text-xs sm:text-sm font-medium text-gray-700 mt-2">Péssimo</p>
-                </div>
-                 <div class="text-center w-20">
-                    <button class="rating-btn mx-auto" data-value="2">😟</button>
-                    <p class="text-xs sm:text-sm font-medium text-gray-700 mt-2">Ruim</p>
-                </div>
-                 <div class="text-center w-20">
-                    <button class="rating-btn mx-auto" data-value="3">😐</button>
-                    <p class="text-xs sm:text-sm font-medium text-gray-700 mt-2">Regular</p>
-                </div>
-                 <div class="text-center w-20">
-                    <button class="rating-btn mx-auto" data-value="4">🙂</button>
-                    <p class="text-xs sm:text-sm font-medium text-gray-700 mt-2">Bom</p>
-                </div>
-                 <div class="text-center w-20">
-                    <button class="rating-btn mx-auto" data-value="5">😄</button>
-                    <p class="text-xs sm:text-sm font-medium text-gray-700 mt-2">Ótimo</p>
+            <!-- Conteúdo da Avaliação (inicialmente oculto) -->
+            <div id="evaluation-content" class="hidden">
+                <h1 class="text-xl md:text-2xl font-bold text-gray-800">Avalie o atendimento de</h1>
+                <p id="company-name" class="text-2xl md:text-3xl font-extrabold text-indigo-600 mt-2">...</p>
+                <p class="text-gray-600 mt-4">Sua opinião é muito importante para nós. Por favor, toque em uma das opções abaixo.</p>
+                
+                <div id="rating-buttons" class="flex justify-center items-start gap-2 sm:gap-4 mt-8">
+                     <div class="text-center w-16 sm:w-20">
+                        <button class="rating-btn mx-auto" data-value="1">😠</button>
+                        <p class="text-xs sm:text-sm font-medium text-gray-700 mt-2">Péssimo</p>
+                    </div>
+                     <div class="text-center w-16 sm:w-20">
+                        <button class="rating-btn mx-auto" data-value="2">😟</button>
+                        <p class="text-xs sm:text-sm font-medium text-gray-700 mt-2">Ruim</p>
+                    </div>
+                     <div class="text-center w-16 sm:w-20">
+                        <button class="rating-btn mx-auto" data-value="3">😐</button>
+                        <p class="text-xs sm:text-sm font-medium text-gray-700 mt-2">Regular</p>
+                    </div>
+                     <div class="text-center w-16 sm:w-20">
+                        <button class="rating-btn mx-auto" data-value="4">🙂</button>
+                        <p class="text-xs sm:text-sm font-medium text-gray-700 mt-2">Bom</p>
+                    </div>
+                     <div class="text-center w-16 sm:w-20">
+                        <button class="rating-btn mx-auto" data-value="5">😄</button>
+                        <p class="text-xs sm:text-sm font-medium text-gray-700 mt-2">Ótimo</p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Mensagem de Sucesso (inicialmente oculta) -->
-        <div id="success-message" class="hidden">
-            <svg class="h-16 w-16 text-green-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <h2 class="text-2xl font-bold text-gray-800 mt-4">Obrigado por avaliar!</h2>
-            <p class="text-gray-600 mt-2">Sua avaliação foi registrada com sucesso.</p>
+            <!-- Mensagem de Sucesso (inicialmente oculta) -->
+            <div id="success-message" class="hidden">
+                <svg class="h-16 w-16 text-green-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h2 class="text-2xl font-bold text-gray-800 mt-4">Obrigado por avaliar!</h2>
+                <p class="text-gray-600 mt-2">Sua avaliação foi registrada com sucesso.</p>
+            </div>
+            
+            <!-- Mensagem de Erro (inicialmente oculta) -->
+            <div id="error-message" class="hidden">
+                 <svg class="h-16 w-16 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h2 class="text-2xl font-bold text-gray-800 mt-4">Página não encontrada</h2>
+                <p class="text-gray-600 mt-2">O link de avaliação parece ser inválido ou a empresa não foi encontrada.</p>
+            </div>
         </div>
-        
-        <!-- Mensagem de Erro (inicialmente oculta) -->
-        <div id="error-message" class="hidden">
-             <svg class="h-16 w-16 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <h2 class="text-2xl font-bold text-gray-800 mt-4">Página não encontrada</h2>
-            <p class="text-gray-600 mt-2">O link de avaliação parece ser inválido ou a empresa não foi encontrada.</p>
-        </div>
-
-    </div>
+    </main>
+    
+    <footer class="py-6 text-center text-sm text-gray-600">
+        <p>
+            <strong>Avalia Ai</strong>, um sistema Prisme Sales | 
+            <a href="https://www.prismeapp.com.br" target="_blank" rel="noopener noreferrer" class="font-medium text-indigo-600 hover:text-indigo-800">
+                www.prismeapp.com.br
+            </a>
+        </p>
+    </footer>
 
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
@@ -157,7 +177,7 @@
         function showSuccess() {
             evaluationContent.classList.add('hidden');
             successMessage.classList.remove('hidden');
-
+            
             // Recarrega a página após 4 segundos para o próximo cliente
             setTimeout(() => {
                 window.location.reload();
@@ -211,5 +231,4 @@
     </script>
 </body>
 </html>
-
 
