@@ -163,7 +163,8 @@
             }
 
             companyNameTitle.textContent = company.nome_empresa;
-            const evaluationLink = `${window.location.origin}/avaliar.html?slug=${company.slug}`;
+            // CORREÇÃO: Usando o domínio fixo para garantir que o link esteja sempre correto.
+            const evaluationLink = `https://avaliaai.prismeapp.com.br/avaliar.html?slug=${company.slug}`;
             evaluationLinkEl.value = evaluationLink;
 
             new QRious({
