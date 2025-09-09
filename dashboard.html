@@ -3,224 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Controle - Avalia Aí</title>
+    <title>Painel de Controle - Prisme Avalia Ai!</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Biblioteca para gerar QR Code -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1/build/qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
         }
-        .stat-card {
-            @apply bg-white p-6 rounded-lg shadow-md text-center;
-        }
-        .stat-value {
-            @apply text-3xl font-bold text-indigo-600;
-        }
-        .stat-label {
-            @apply text-sm font-medium text-gray-500 mt-1;
-        }
     </style>
 </head>
 <body class="bg-gray-100">
-
-    <div id="loader" class="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
-        <svg class="animate-spin h-8 w-8 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-    </div>
-
-    <div id="dashboard-content" class="hidden">
-        <header class="bg-white shadow-sm">
-            <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-                <h1 class="text-2xl font-bold text-gray-900">
-                    Painel de Controle
-                </h1>
-                <button id="logout-button" class="text-sm font-medium text-indigo-600 hover:text-indigo-800">Sair</button>
-            </div>
-        </header>
-
-        <main class="py-10">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="bg-white p-6 rounded-lg shadow-md mb-8">
-                     <h2 class="text-xl font-semibold text-gray-800">Olá, <span id="company-name" class="text-indigo-600">...</span>!</h2>
-                     <p class="text-gray-600 mt-2">Este é o seu link exclusivo para receber avaliações de seus clientes. Imprima o QR Code e deixe-o visível no seu balcão.</p>
-                </div>
-                
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <!-- Coluna do QR Code e Link -->
-                    <div class="lg:col-span-1 bg-white p-6 rounded-lg shadow-md flex flex-col items-center">
-                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Seu QR Code de Avaliação</h3>
-                        <div id="qrcode-container" class="p-4 border rounded-lg">
-                            <!-- O QR Code será inserido aqui -->
-                        </div>
-                        <p class="text-xs text-gray-500 mt-2">Aponte a câmera para testar</p>
-                        
-                        <div class="mt-6 w-full">
-                             <label for="evaluation-link" class="block text-sm font-medium text-gray-700">Seu link único:</label>
-                             <div class="mt-1 flex rounded-md shadow-sm">
-                                 <input type="text" id="evaluation-link" class="flex-1 block w-full rounded-none rounded-l-md sm:text-sm border-gray-300 bg-gray-50 p-2" readonly>
-                                 <button id="copy-link-button" class="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-100 text-sm font-medium text-gray-700 hover:bg-gray-200">Copiar</button>
-                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Coluna de Estatísticas e Avaliações -->
-                    <div class="lg:col-span-2 space-y-8">
-                        <!-- Stats -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <div class="stat-card">
-                                <p id="average-rating" class="stat-value">0.0</p>
-                                <p class="stat-label">Média de Avaliações</p>
-                            </div>
-                             <div class="stat-card">
-                                <p id="total-ratings" class="stat-value">0</p>
-                                <p class="stat-label">Total de Avaliações</p>
-                            </div>
-                        </div>
-
-                        <!-- Lista de Avaliações -->
-                        <div class="bg-white p-6 rounded-lg shadow-md">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Últimas Avaliações</h3>
-                            <ul id="reviews-list" class="space-y-4">
-                                <!-- Avaliações serão inseridas aqui -->
-                                <li id="no-reviews-message" class="text-center text-gray-500 py-4">Ainda não há avaliações.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-gray-900">
+                Painel de Controle
+            </h1>
+            <button id="logout-button" class="text-sm font-medium text-indigo-600 hover:text-indigo-800">Sair</button>
+        </div>
+    </header>
     
+    <main class="py-10">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Greeting Card -->
+            <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+                <h2 class="text-xl font-semibold text-gray-800">Olá, <span id="company-name" class="text-indigo-600">Carregando...</span>!</h2>
+                <p class="text-gray-600 mt-2">Aqui estão os dados sobre as avaliações do seu negócio.</p>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <p class="text-3xl font-bold text-indigo-600" id="average-rating">...</p>
+                    <p class="text-sm font-medium text-gray-500 mt-1">Média Geral</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <p class="text-3xl font-bold text-indigo-600" id="total-ratings">...</p>
+                    <p class="text-sm font-medium text-gray-500 mt-1">Total de Avaliações</p>
+                </div>
+            </div>
+
+            <!-- QR Code and Link -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">QR Code para Avaliação</h3>
+                    <canvas id="qr-code" class="mx-auto"></canvas>
+                    <p class="text-xs text-gray-500 mt-4">Aponte a câmera do celular para avaliar.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md flex flex-col justify-center">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Seu Link de Avaliação</h3>
+                    <p class="text-gray-500 mb-4">Compartilhe este link com seus clientes.</p>
+                    <div class="relative">
+                        <input id="evaluation-link" type="text" class="w-full bg-gray-100 p-3 rounded-lg border focus:outline-none" readonly>
+                        <button id="copy-button" class="absolute right-2 top-1/2 -translate-y-1/2 bg-indigo-600 text-white px-3 py-1 rounded-md text-sm hover:bg-indigo-700">Copiar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Ratings -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Últimas Avaliações Recebidas</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left text-gray-500">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">Nota</th>
+                                <th scope="col" class="px-6 py-3">Data</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ratings-table-body">
+                            <!-- Rows will be inserted here -->
+                        </tbody>
+                    </table>
+                    <p id="no-ratings-message" class="text-center text-gray-500 py-8 hidden">Nenhuma avaliação recebida ainda.</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
         const SUPABASE_URL = 'https://uufwwbsuljjhaqhpyilg.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1Znd3YnN1bGpqaGFxaHB5aWxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0Mzg0NDEsImV4cCI6MjA3MzAxNDQ0MX0.NqvvWYFIIXjVU7y4OvkLxE-ozg0PX2MFCJqo6gD0KQQ';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1Znd3YnN1bGpqaGFxaHB5aWxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0Mzg0NDEsImV4cCI6MjA3MzAxNDQ0MX0.NqvvWYIIXjVU7y4OvkLxE-ozg0PX2MFCJqo6gD0KQQ';
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Elementos da UI
-        const loader = document.getElementById('loader');
-        const dashboardContent = document.getElementById('dashboard-content');
         const companyNameEl = document.getElementById('company-name');
-        const evaluationLinkEl = document.getElementById('evaluation-link');
-        const qrcodeContainer = document.getElementById('qrcode-container');
-        const copyLinkButton = document.getElementById('copy-link-button');
         const averageRatingEl = document.getElementById('average-rating');
         const totalRatingsEl = document.getElementById('total-ratings');
-        const reviewsListEl = document.getElementById('reviews-list');
-        const noReviewsMessage = document.getElementById('no-reviews-message');
+        const evaluationLinkEl = document.getElementById('evaluation-link');
+        const copyButton = document.getElementById('copy-button');
+        const ratingsTableBody = document.getElementById('ratings-table-body');
+        const noRatingsMessage = document.getElementById('no-ratings-message');
+        const qrCanvas = document.getElementById('qr-code');
         const logoutButton = document.getElementById('logout-button');
-        
-        async function loadDashboardData() {
-            const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
-            if (sessionError || !session) {
-                console.log('Nenhuma sessão encontrada, redirecionando para login.');
+        async function main() {
+            const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+            if (!session || sessionError) {
                 window.location.href = 'index.html';
                 return;
             }
-
             const user = session.user;
 
-            // 1. Buscar dados da empresa
-            const { data: empresa, error: empresaError } = await supabase
+            // 1. Fetch Company Data
+            const { data: company, error: companyError } = await supabase
                 .from('empresas')
                 .select('*')
                 .eq('user_id', user.id)
-                .single(); // Esperamos apenas um resultado
+                .single();
 
-            if (empresaError || !empresa) {
-                console.error('Erro ao buscar dados da empresa:', empresaError);
-                // Pode ser que o cadastro não foi finalizado, redirecionar ou mostrar erro
-                if(empresaError && empresaError.code === 'PGRST116'){
-                    alert("Parece que seu cadastro não foi finalizado. Tente relogar ou contate o suporte.");
-                }
-                loader.classList.add('hidden');
+            if (companyError || !company) {
+                console.error('Erro ao buscar empresa:', companyError);
+                companyNameEl.textContent = 'Empresa não encontrada';
                 return;
             }
+
+            companyNameEl.textContent = company.nome_empresa;
             
-            // 2. Popular informações da empresa
-            companyNameEl.textContent = empresa.nome_empresa;
-            const domain = 'avaliaai.prismeapp.com.br'; // Seu domínio
-            const evaluationLink = `https://${domain}/avaliar.html?slug=${empresa.slug_url}`;
+            const slug = company.slug;
+            if (!slug) {
+                 console.error("Slug não encontrado nos dados da empresa:", company);
+                 evaluationLinkEl.value = 'Erro: Slug da empresa não encontrado.';
+                 return;
+            }
+
+            const evaluationLink = `https://avaliaai.prismeapp.com.br/avaliar.html?slug=${slug}`;
             evaluationLinkEl.value = evaluationLink;
 
-            // 3. Gerar QR Code
-            QRCode.toCanvas(evaluationLink, { width: 200, margin: 1 }, function (error, canvas) {
-                if (error) console.error(error);
-                qrcodeContainer.innerHTML = ''; // Limpa o container
-                canvas.classList.add('w-full', 'h-auto');
-                qrcodeContainer.appendChild(canvas);
+            new QRious({
+                element: qrCanvas,
+                value: evaluationLink,
+                size: 160,
+                padding: 10,
             });
-            
-            // 4. Buscar avaliações
-            const { data: avaliacoes, error: avaliacoesError } = await supabase
+
+            // 2. Fetch Ratings Data
+            const { data: ratings, error: ratingsError } = await supabase
                 .from('avaliacoes')
                 .select('nota, created_at')
-                .eq('empresa_id', empresa.id)
+                .eq('empresa_id', company.id)
                 .order('created_at', { ascending: false });
-
-            if (avaliacoesError) {
-                console.error('Erro ao buscar avaliações:', avaliacoesError);
+            
+            if (ratingsError) {
+                console.error('Erro ao buscar avaliações:', ratingsError);
+                return;
             }
 
-            // 5. Calcular estatísticas e mostrar avaliações
-            if (avaliacoes && avaliacoes.length > 0) {
-                noReviewsMessage.classList.add('hidden');
-                
-                const total = avaliacoes.length;
-                const sum = avaliacoes.reduce((acc, curr) => acc + curr.nota, 0);
-                const average = (sum / total).toFixed(1);
-
-                totalRatingsEl.textContent = total;
-                averageRatingEl.textContent = average;
-                
-                // Limpa a lista antes de adicionar novos itens
-                reviewsListEl.innerHTML = ''; 
-
-                avaliacoes.slice(0, 5).forEach(review => { // Mostra as 5 mais recentes
-                    const li = document.createElement('li');
-                    li.className = 'flex justify-between items-center border-b pb-2';
-                    
-                    const ratingStars = '⭐️'.repeat(review.nota) + '⚫️'.repeat(5 - review.nota);
-                    const reviewDate = new Date(review.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
-
-                    li.innerHTML = `
-                        <span class="text-yellow-500">${ratingStars}</span>
-                        <span class="text-sm text-gray-500">${reviewDate}</span>
-                    `;
-                    reviewsListEl.appendChild(li);
-                });
-
+            // 3. Update UI
+            if (ratings.length === 0) {
+                averageRatingEl.textContent = 'N/A';
+                totalRatingsEl.textContent = '0';
+                noRatingsMessage.classList.remove('hidden');
             } else {
-                 noReviewsMessage.classList.remove('hidden');
+                const total = ratings.reduce((acc, rating) => acc + rating.nota, 0);
+                const average = (total / ratings.length).toFixed(1);
+                
+                averageRatingEl.textContent = average;
+                totalRatingsEl.textContent = ratings.length;
+
+                ratingsTableBody.innerHTML = '';
+                ratings.forEach(rating => {
+                    const date = new Date(rating.created_at).toLocaleDateString('pt-BR', {
+                        day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                    });
+                    const row = `
+                        <tr class="bg-white border-b">
+                            <td class="px-6 py-4 font-medium text-gray-900">${'⭐'.repeat(rating.nota)}</td>
+                            <td class="px-6 py-4">${date}</td>
+                        </tr>
+                    `;
+                    ratingsTableBody.innerHTML += row;
+                });
             }
-
-
-            // Exibe o conteúdo do dashboard
-            loader.classList.add('hidden');
-            dashboardContent.classList.remove('hidden');
         }
 
-        // Event Listeners
-        copyLinkButton.addEventListener('click', () => {
+        copyButton.addEventListener('click', () => {
             evaluationLinkEl.select();
             document.execCommand('copy');
-            copyLinkButton.textContent = 'Copiado!';
-            setTimeout(() => { copyLinkButton.textContent = 'Copiar'; }, 2000);
+            copyButton.textContent = 'Copiado!';
+            setTimeout(() => {
+                copyButton.textContent = 'Copiar';
+            }, 2000);
         });
-
+        
         logoutButton.addEventListener('click', async () => {
             await supabase.auth.signOut();
             window.location.href = 'index.html';
         });
 
-        // Iniciar o carregamento dos dados
-        document.addEventListener('DOMContentLoaded', loadDashboardData);
+        main();
     </script>
 </body>
 </html>
+
