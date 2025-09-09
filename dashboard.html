@@ -121,7 +121,8 @@
 
             companyNameEl.textContent = company.nome_empresa;
             
-            const slug = company.slug;
+            // CORREÇÃO: Utilizando a coluna 'slug_url' que existe no seu banco de dados.
+            const slug = company.slug_url;
             if (!slug) {
                  console.error("Slug não encontrado nos dados da empresa:", company);
                  evaluationLinkEl.value = 'Erro: Slug da empresa não encontrado.';
@@ -196,5 +197,4 @@
     </script>
 </body>
 </html>
-
 
