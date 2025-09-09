@@ -56,12 +56,27 @@
             <p id="company-name" class="text-2xl md:text-3xl font-extrabold text-indigo-600 mt-2">...</p>
             <p class="text-gray-600 mt-4">Sua opinião é muito importante para nós. Por favor, toque em uma das opções abaixo.</p>
             
-            <div id="rating-buttons" class="flex justify-center items-center flex-wrap gap-3 sm:gap-4 mt-8">
-                <button class="rating-btn" data-value="1">😠</button>
-                <button class="rating-btn" data-value="2">😟</button>
-                <button class="rating-btn" data-value="3">😐</button>
-                <button class="rating-btn" data-value="4">🙂</button>
-                <button class="rating-btn" data-value="5">😄</button>
+            <div id="rating-buttons" class="flex justify-center items-start flex-wrap gap-3 sm:gap-4 mt-8">
+                 <div class="text-center w-20">
+                    <button class="rating-btn mx-auto" data-value="1">😠</button>
+                    <p class="text-xs sm:text-sm font-medium text-gray-700 mt-2">Péssimo</p>
+                </div>
+                 <div class="text-center w-20">
+                    <button class="rating-btn mx-auto" data-value="2">😟</button>
+                    <p class="text-xs sm:text-sm font-medium text-gray-700 mt-2">Ruim</p>
+                </div>
+                 <div class="text-center w-20">
+                    <button class="rating-btn mx-auto" data-value="3">😐</button>
+                    <p class="text-xs sm:text-sm font-medium text-gray-700 mt-2">Regular</p>
+                </div>
+                 <div class="text-center w-20">
+                    <button class="rating-btn mx-auto" data-value="4">🙂</button>
+                    <p class="text-xs sm:text-sm font-medium text-gray-700 mt-2">Bom</p>
+                </div>
+                 <div class="text-center w-20">
+                    <button class="rating-btn mx-auto" data-value="5">😄</button>
+                    <p class="text-xs sm:text-sm font-medium text-gray-700 mt-2">Ótimo</p>
+                </div>
             </div>
         </div>
 
@@ -142,6 +157,11 @@
         function showSuccess() {
             evaluationContent.classList.add('hidden');
             successMessage.classList.remove('hidden');
+
+            // Recarrega a página após 4 segundos para o próximo cliente
+            setTimeout(() => {
+                window.location.reload();
+            }, 4000);
         }
 
         async function submitRating(nota, selectedButton) {
@@ -191,4 +211,5 @@
     </script>
 </body>
 </html>
+
 
