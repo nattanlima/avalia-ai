@@ -11,83 +11,101 @@
         body {
             font-family: 'Inter', sans-serif;
         }
+        #loader {
+            border-top-color: #4f46e5;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-100">
-    <header class="bg-white shadow-sm">
-        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-gray-900">
-                Painel de Controle
-            </h1>
-            <button id="logout-button" class="text-sm font-medium text-indigo-600 hover:text-indigo-800">Sair</button>
-        </div>
-    </header>
-    
-    <main class="py-10">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Greeting Card -->
-            <div class="bg-white p-6 rounded-lg shadow-md mb-8">
-                <h2 class="text-xl font-semibold text-gray-800">Olá, <span id="company-name" class="text-indigo-600">Carregando...</span>!</h2>
-                <p class="text-gray-600 mt-2">Aqui estão os dados sobre as avaliações do seu negócio.</p>
-            </div>
 
-            <!-- Stats -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <p class="text-3xl font-bold text-indigo-600" id="average-rating">...</p>
-                    <p class="text-sm font-medium text-gray-500 mt-1">Média Geral</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <p class="text-3xl font-bold text-indigo-600" id="total-ratings">...</p>
-                    <p class="text-sm font-medium text-gray-500 mt-1">Total de Avaliações</p>
-                </div>
-            </div>
+    <!-- Tela de Carregamento -->
+    <div id="loader-container" class="fixed inset-0 bg-white flex flex-col items-center justify-center z-50">
+        <div id="loader" class="w-12 h-12 border-4 border-gray-200 rounded-full"></div>
+        <p class="mt-4 text-gray-600">Carregando seus dados...</p>
+    </div>
 
-            <!-- QR Code and Link -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">QR Code para Avaliação</h3>
-                    <canvas id="qr-code" class="mx-auto"></canvas>
-                    <p class="text-xs text-gray-500 mt-4">Aponte a câmera do celular para avaliar.</p>
+    <!-- Conteúdo do Dashboard (inicialmente oculto) -->
+    <div id="dashboard-content" class="hidden">
+        <header class="bg-white shadow-sm">
+            <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+                <h1 class="text-2xl font-bold text-gray-900">
+                    Painel de Controle
+                </h1>
+                <button id="logout-button" class="text-sm font-medium text-indigo-600 hover:text-indigo-800">Sair</button>
+            </div>
+        </header>
+        
+        <main class="py-10">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+                    <h2 class="text-xl font-semibold text-gray-800">Olá, <span id="company-name" class="text-indigo-600">...</span>!</h2>
+                    <p class="text-gray-600 mt-2">Aqui estão os dados sobre as avaliações do seu negócio.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md flex flex-col justify-center">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Seu Link de Avaliação</h3>
-                    <p class="text-gray-500 mb-4">Compartilhe este link com seus clientes.</p>
-                    <div class="relative">
-                        <input id="evaluation-link" type="text" class="w-full bg-gray-100 p-3 rounded-lg border focus:outline-none" readonly>
-                        <button id="copy-button" class="absolute right-2 top-1/2 -translate-y-1/2 bg-indigo-600 text-white px-3 py-1 rounded-md text-sm hover:bg-indigo-700">Copiar</button>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                        <p class="text-3xl font-bold text-indigo-600" id="average-rating">...</p>
+                        <p class="text-sm font-medium text-gray-500 mt-1">Média Geral</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                        <p class="text-3xl font-bold text-indigo-600" id="total-ratings">...</p>
+                        <p class="text-sm font-medium text-gray-500 mt-1">Total de Avaliações</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">QR Code para Avaliação</h3>
+                        <canvas id="qr-code" class="mx-auto"></canvas>
+                        <p class="text-xs text-gray-500 mt-4">Aponte a câmera do celular para avaliar.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md flex flex-col justify-center">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Seu Link de Avaliação</h3>
+                        <p class="text-gray-500 mb-4">Compartilhe este link com seus clientes.</p>
+                        <div class="relative">
+                            <input id="evaluation-link" type="text" class="w-full bg-gray-100 p-3 rounded-lg border focus:outline-none" readonly>
+                            <button id="copy-button" class="absolute right-2 top-1/2 -translate-y-1/2 bg-indigo-600 text-white px-3 py-1 rounded-md text-sm hover:bg-indigo-700">Copiar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Últimas Avaliações Recebidas</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">Nota</th>
+                                    <th scope="col" class="px-6 py-3">Data</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ratings-table-body">
+                                <!-- As linhas da tabela serão inseridas aqui -->
+                            </tbody>
+                        </table>
+                        <p id="no-ratings-message" class="text-center text-gray-500 py-8 hidden">Nenhuma avaliação recebida ainda.</p>
                     </div>
                 </div>
             </div>
-
-            <!-- Recent Ratings -->
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">Últimas Avaliações Recebidas</h3>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm text-left text-gray-500">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">Nota</th>
-                                <th scope="col" class="px-6 py-3">Data</th>
-                            </tr>
-                        </thead>
-                        <tbody id="ratings-table-body">
-                            <!-- Rows will be inserted here -->
-                        </tbody>
-                    </table>
-                    <p id="no-ratings-message" class="text-center text-gray-500 py-8 hidden">Nenhuma avaliação recebida ainda.</p>
-                </div>
-            </div>
-
-        </div>
-    </main>
+        </main>
+    </div>
 
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+        
+        // --- 1. CONFIGURAÇÃO E ELEMENTOS DO DOM ---
         const SUPABASE_URL = 'https://uufwwbsuljjhaqhpyilg.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1Znd3YnN1bGpqaGFxaHB5aWxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0Mzg0NDEsImV4cCI6MjA3MzAxNDQ0MX0.NqvvWYIIXjVU7y4OvkLxE-ozg0PX2MFCJqo6gD0KQQ';
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        const loaderContainer = document.getElementById('loader-container');
+        const dashboardContent = document.getElementById('dashboard-content');
         const companyNameEl = document.getElementById('company-name');
         const averageRatingEl = document.getElementById('average-rating');
         const totalRatingsEl = document.getElementById('total-ratings');
@@ -98,87 +116,105 @@
         const qrCanvas = document.getElementById('qr-code');
         const logoutButton = document.getElementById('logout-button');
 
-        async function main() {
-            const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-            if (!session || sessionError) {
-                window.location.href = 'index.html';
-                return;
+        // --- 2. FUNÇÃO PRINCIPAL PARA CARREGAR DADOS ---
+        async function loadDashboard() {
+            try {
+                // VERIFICA SESSÃO DO USUÁRIO
+                const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+                if (sessionError || !session) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+                const user = session.user;
+
+                // BUSCA DADOS DA EMPRESA
+                const { data: company, error: companyError } = await supabase
+                    .from('empresas')
+                    .select('*')
+                    .eq('user_id', user.id)
+                    .single();
+
+                if (companyError || !company) {
+                    throw new Error('Não foi possível carregar os dados da sua empresa. ' + (companyError?.message || ''));
+                }
+
+                // ATUALIZA NOME DA EMPRESA E LINK DE AVALIAÇÃO
+                companyNameEl.textContent = company.nome_empresa;
+                
+                const slug = company.slug_url; // Usando a coluna correta
+                if (!slug) {
+                    throw new Error('O slug da sua empresa não foi encontrado.');
+                }
+                const evaluationLink = `https://avaliaai.prismeapp.com.br/avaliar.html?slug=${slug}`;
+                evaluationLinkEl.value = evaluationLink;
+
+                // GERA QR CODE
+                new QRious({
+                    element: qrCanvas,
+                    value: evaluationLink,
+                    size: 160,
+                    padding: 10,
+                });
+
+                // BUSCA AVALIAÇÕES
+                const { data: ratings, error: ratingsError } = await supabase
+                    .from('avaliacoes')
+                    .select('nota, created_at')
+                    .eq('empresa_id', company.id)
+                    .order('created_at', { ascending: false });
+
+                if (ratingsError) {
+                    throw new Error('Não foi possível carregar as avaliações. ' + ratingsError.message);
+                }
+                
+                // ATUALIZA ESTATÍSTICAS E TABELA
+                updateRatingsUI(ratings);
+
+            } catch (error) {
+                console.error("Erro Crítico no Dashboard:", error);
+                document.body.innerHTML = `<div class="text-center p-8">
+                    <h1 class="text-2xl font-bold text-red-600">Ocorreu um Erro</h1>
+                    <p class="text-gray-600 mt-2">${error.message}</p>
+                    <p class="mt-4">Por favor, <a href="dashboard.html" class="text-indigo-600 underline">recarregue a página</a> ou tente fazer login novamente.</p>
+                </div>`;
+            } finally {
+                // ESCONDE O LOADER E MOSTRA O CONTEÚDO
+                loaderContainer.classList.add('hidden');
+                dashboardContent.classList.remove('hidden');
             }
-            const user = session.user;
-
-            // 1. Fetch Company Data
-            const { data: company, error: companyError } = await supabase
-                .from('empresas')
-                .select('*')
-                .eq('user_id', user.id)
-                .single();
-
-            if (companyError || !company) {
-                console.error('Erro ao buscar empresa:', companyError);
-                companyNameEl.textContent = 'Empresa não encontrada';
-                return;
-            }
-
-            companyNameEl.textContent = company.nome_empresa;
-            
-            // CORREÇÃO: Utilizando a coluna 'slug_url' que existe no seu banco de dados.
-            const slug = company.slug_url;
-            if (!slug) {
-                 console.error("Slug não encontrado nos dados da empresa:", company);
-                 evaluationLinkEl.value = 'Erro: Slug da empresa não encontrado.';
-                 return;
-            }
-
-            const evaluationLink = `https://avaliaai.prismeapp.com.br/avaliar.html?slug=${slug}`;
-            evaluationLinkEl.value = evaluationLink;
-
-            new QRious({
-                element: qrCanvas,
-                value: evaluationLink,
-                size: 160,
-                padding: 10,
-            });
-
-            // 2. Fetch Ratings Data
-            const { data: ratings, error: ratingsError } = await supabase
-                .from('avaliacoes')
-                .select('nota, created_at')
-                .eq('empresa_id', company.id)
-                .order('created_at', { ascending: false });
-            
-            if (ratingsError) {
-                console.error('Erro ao buscar avaliações:', ratingsError);
-                return;
-            }
-
-            // 3. Update UI
-            if (ratings.length === 0) {
+        }
+        
+        // --- 3. FUNÇÃO AUXILIAR PARA ATUALIZAR A UI ---
+        function updateRatingsUI(ratings) {
+            if (!ratings || ratings.length === 0) {
                 averageRatingEl.textContent = 'N/A';
                 totalRatingsEl.textContent = '0';
                 noRatingsMessage.classList.remove('hidden');
-            } else {
-                const total = ratings.reduce((acc, rating) => acc + rating.nota, 0);
-                const average = (total / ratings.length).toFixed(1);
-                
-                averageRatingEl.textContent = average;
-                totalRatingsEl.textContent = ratings.length;
-
-                ratingsTableBody.innerHTML = '';
-                ratings.forEach(rating => {
-                    const date = new Date(rating.created_at).toLocaleDateString('pt-BR', {
-                        day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
-                    });
-                    const row = `
-                        <tr class="bg-white border-b">
-                            <td class="px-6 py-4 font-medium text-gray-900">${'⭐'.repeat(rating.nota)}</td>
-                            <td class="px-6 py-4">${date}</td>
-                        </tr>
-                    `;
-                    ratingsTableBody.innerHTML += row;
-                });
+                return;
             }
+
+            const total = ratings.reduce((acc, rating) => acc + rating.nota, 0);
+            const average = (total / ratings.length).toFixed(1);
+            
+            averageRatingEl.textContent = average;
+            totalRatingsEl.textContent = ratings.length;
+
+            ratingsTableBody.innerHTML = ''; // Limpa a tabela
+            ratings.forEach(rating => {
+                const date = new Date(rating.created_at).toLocaleDateString('pt-BR', {
+                    day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                });
+                const row = `
+                    <tr class="bg-white border-b">
+                        <td class="px-6 py-4 font-medium text-gray-900">${'⭐'.repeat(rating.nota)}</td>
+                        <td class="px-6 py-4">${date}</td>
+                    </tr>
+                `;
+                ratingsTableBody.innerHTML += row;
+            });
         }
 
+        // --- 4. EVENT LISTENERS ---
         copyButton.addEventListener('click', () => {
             evaluationLinkEl.select();
             document.execCommand('copy');
@@ -193,7 +229,8 @@
             window.location.href = 'index.html';
         });
 
-        main();
+        // --- 5. INICIALIZAÇÃO ---
+        loadDashboard();
     </script>
 </body>
 </html>
