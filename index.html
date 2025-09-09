@@ -1,58 +1,62 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Prisme Avalia Ai!</title>
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" sizes="16x16" href="https://raw.githubusercontent.com/nattanlima/avalia-ai/refs/heads/main/icons/favicon-16x16.ico">
-    <link rel="shortcut icon" href="https://raw.githubusercontent.com/nattanlima/avalia-ai/refs/heads/main/icons/favicon-16x16.ico">
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            overflow: hidden; /* Evita scrollbars durante as transições */
         }
-        /* Nova cor primária da Prisme (Verde) */
+
+        /* Cor primária Prisme (Verde) */
         .bg-prisme-primary { background-color: #10B981; }
         .hover\:bg-prisme-primary-dark:hover { background-color: #059669; }
         .text-prisme-primary { color: #10B981; }
         .hover\:text-prisme-primary-dark:hover { color: #059669; }
         .border-prisme-primary { border-color: #10B981; }
-        .ring-prisme-primary { --tw-ring-color: #10B981; }
+        .focus\:ring-prisme-primary:focus {
+            --tw-ring-color: #10B981;
+        }
 
         /* Estilos para transições de formulário */
+        .form-container {
+            position: relative;
+            min-height: 420px; /* Altura mínima para evitar "pulos" */
+            overflow: hidden;
+        }
+
         .form-step {
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-        }
-        .form-step.hidden-step {
-            opacity: 0;
-            transform: translateX(100%);
             position: absolute;
             width: 100%;
+            transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
+            opacity: 1;
         }
-       .form-step.back-step {
-            opacity: 0;
+
+        .form-step.hidden-left {
             transform: translateX(-100%);
-            position: absolute;
-            width: 100%;
+            opacity: 0;
+        }
+
+        .form-step.hidden-right {
+            transform: translateX(100%);
+            opacity: 0;
         }
     </style>
 </head>
+
 <body class="bg-gray-50">
     <div class="min-h-screen flex">
-        <!-- Coluna Esquerda (Branding) - Visível em telas médias e maiores -->
         <div class="hidden lg:flex w-1/2 bg-prisme-primary items-center justify-center p-12 text-white flex-col relative overflow-hidden">
-             <div class="absolute bg-green-500/20 rounded-full w-96 h-96 -top-20 -left-16"></div>
-             <div class="absolute bg-green-500/20 rounded-full w-[500px] h-[500px] -bottom-32 -right-24"></div>
+            <div class="absolute bg-green-500/20 rounded-full w-96 h-96 -top-20 -left-16"></div>
+            <div class="absolute bg-green-500/20 rounded-full w-[500px] h-[500px] -bottom-32 -right-24"></div>
             <h1 class="text-4xl font-bold mb-4 z-10">Transforme opiniões em crescimento.</h1>
             <p class="text-lg text-green-100 z-10">A forma mais simples de entender o que seus clientes realmente pensam.</p>
         </div>
 
-        <!-- Coluna Direita (Formulário) -->
         <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12">
             <div class="w-full max-w-md">
                 <div class="text-center mb-8">
@@ -64,34 +68,29 @@
                     </h2>
                 </div>
 
-                <div class="relative overflow-hidden" style="min-height: 350px;">
-                    <!-- Formulário de Login -->
+                <div class="form-container">
                     <form id="login-form" class="space-y-6 form-step" action="#" method="POST">
                         <div>
-                            <label for="login-email" class="block text-sm font-medium text-gray-700"> Email </label>
+                            <label for="login-email" class="block text-sm font-medium text-gray-700">Email</label>
                             <div class="mt-1">
                                 <input id="login-email" name="email" type="email" autocomplete="email" required class="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
                             </div>
                         </div>
-
                         <div>
-                            <label for="login-password" class="block text-sm font-medium text-gray-700"> Senha </label>
+                            <label for="login-password" class="block text-sm font-medium text-gray-700">Senha</label>
                             <div class="mt-1">
                                 <input id="login-password" name="password" type="password" autocomplete="current-password" required class="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
                             </div>
                         </div>
-
                         <div>
                             <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-prisme-primary hover:bg-prisme-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-prisme-primary transition-transform transform hover:scale-105">
                                 Entrar
                             </button>
                         </div>
                     </form>
-                    
-                    <!-- Formulário de Cadastro (Multi-Step) -->
-                    <form id="register-form" class="space-y-6 form-step hidden-step" action="#" method="POST">
-                        <!-- Passo 1: Dados Pessoais -->
-                        <div id="step-1" class="form-step space-y-6">
+
+                    <form id="register-form" class="space-y-6 form-step hidden-right" action="#" method="POST">
+                        <div id="step-1" class="space-y-6 form-step">
                             <div>
                                 <label for="register-name" class="block text-sm font-medium text-gray-700">Seu nome</label>
                                 <input id="register-name" type="text" required class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
@@ -104,39 +103,37 @@
                                 Continuar
                             </button>
                         </div>
-                        
-                        <!-- Passo 2: Dados da Empresa -->
-                        <div id="step-2" class="form-step space-y-6 hidden-step">
-                             <div>
+
+                        <div id="step-2" class="space-y-6 form-step hidden-right">
+                            <div>
                                 <label for="register-company-name" class="block text-sm font-medium text-gray-700">Nome da Empresa</label>
                                 <input id="register-company-name" type="text" required class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
                             </div>
-                            <div>
+                             <div>
                                 <label for="register-segment" class="block text-sm font-medium text-gray-700">Seguimento</label>
                                 <input id="register-segment" type="text" required class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
                             </div>
-                             <div>
-                                <label for="register-cnpj" class="block text-sm font-medium text-gray-700">CNPJ (apenas números)</label>
-                                <input id="register-cnpj" type="text" pattern="\d*" title="Apenas números" required class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
+                            <div>
+                                <label for="register-cnpj" class="block text-sm font-medium text-gray-700">CNPJ</label>
+                                <input id="register-cnpj" type="text" required placeholder="00.000.000/0000-00" class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
                             </div>
                             <div>
-                                <label for="register-cpf" class="block text-sm font-medium text-gray-700">Seu CPF (apenas números)</label>
-                                <input id="register-cpf" type="text" pattern="\d*" title="Apenas números" required class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
+                                <label for="register-cpf" class="block text-sm font-medium text-gray-700">Seu CPF</label>
+                                <input id="register-cpf" type="text" required placeholder="000.000.000-00" class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
                             </div>
                             <div class="flex gap-4">
-                               <button type="button" id="back-step-2" class="w-1/2 flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">Voltar</button>
+                                <button type="button" id="back-step-2" class="w-1/2 flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">Voltar</button>
                                 <button type="button" id="next-step-2" class="w-1/2 flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-prisme-primary hover:bg-prisme-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-prisme-primary">Continuar</button>
                             </div>
                         </div>
 
-                        <!-- Passo 3: Credenciais -->
-                        <div id="step-3" class="form-step space-y-6 hidden-step">
+                        <div id="step-3" class="space-y-6 form-step hidden-right">
                             <div>
                                 <label for="register-email" class="block text-sm font-medium text-gray-700">Email</label>
                                 <input id="register-email" type="email" required class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
                             </div>
                             <div>
-                                <label for="register-password" class="block text-sm font-medium text-gray-700">Crie uma senha</label>
+                                <label for="register-password" class="block text-sm font-medium text-gray-700">Crie uma senha (mínimo 6 caracteres)</label>
                                 <input id="register-password" type="password" required minlength="6" class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
                             </div>
                             <div>
@@ -151,7 +148,7 @@
                     </form>
                 </div>
 
-                <div id="message-area" class="mt-4 text-sm text-center transition-opacity duration-300"></div>
+                <div id="message-area" class="mt-4 text-sm text-center transition-opacity duration-300 h-5"></div>
 
                 <div class="mt-6 text-center">
                     <a href="#" id="toggle-form" class="inline-block w-full py-3 px-4 font-medium text-center text-prisme-primary rounded-lg hover:bg-green-50 transition duration-150 ease-in-out">
@@ -161,170 +158,155 @@
             </div>
         </div>
     </div>
-    
+
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+        // --- Configuração do Supabase ---
         const SUPABASE_URL = 'https://uufwwbsuljjhaqhpyilg.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1Znd3YnN1bGpqaGFxaHB5aWxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0Mzg0NDEsImV4cCI6MjA3MzAxNDQ0MX0.NqvvWYFIIXjVU7y4OvkLxE-ozg0PX2MFCJqo6gD0KQQ';
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
+
+        // --- Elementos do DOM ---
         const loginForm = document.getElementById('login-form');
         const registerForm = document.getElementById('register-form');
         const toggleLink = document.getElementById('toggle-form');
         const formTitle = document.getElementById('form-title');
         const messageArea = document.getElementById('message-area');
-
-        // --- Validação para campos numéricos ---
-        const numericInputs = [
-            document.getElementById('register-whatsapp'),
-            document.getElementById('register-cnpj'),
-            document.getElementById('register-cpf')
-        ];
-
-        numericInputs.forEach(input => {
-            if (input) {
-                input.addEventListener('input', () => {
-                    // Remove qualquer caractere que não seja um número
-                    input.value = input.value.replace(/[^0-9]/g, '');
-                });
-            }
-        });
-
-        // --- Lógica do formulário de múltiplos passos ---
         const steps = [document.getElementById('step-1'), document.getElementById('step-2'), document.getElementById('step-3')];
         const nextButtons = [document.getElementById('next-step-1'), document.getElementById('next-step-2')];
         const backButtons = [document.getElementById('back-step-2'), document.getElementById('back-step-3')];
+
+        // --- Estado do Formulário ---
         let currentStep = 0;
 
-        function showStep(stepIndex, direction = 'forward') {
-            steps.forEach((step, index) => {
-                const isTarget = index === stepIndex;
-                if(isTarget) {
-                    step.classList.remove('hidden-step', 'back-step');
-                } else {
-                    if(direction === 'forward' && index < stepIndex) {
-                        step.classList.add('back-step');
-                        step.classList.remove('hidden-step');
-                    } else if (direction === 'backward' && index > stepIndex) {
-                        step.classList.add('hidden-step');
-                        step.classList.remove('back-step');
-                    } else {
-                        // For other cases, ensure they are correctly positioned off-screen
-                        if (index > stepIndex) {
-                            step.classList.add('hidden-step');
-                            step.classList.remove('back-step');
-                        } else {
-                             step.classList.add('back-step');
-                             step.classList.remove('hidden-step');
-                        }
-                    }
+        // --- Funções Auxiliares ---
+        function showMessage(message, isError = false) {
+            messageArea.textContent = message;
+            messageArea.className = `mt-4 text-sm text-center h-5 transition-opacity duration-300 ${isError ? 'text-red-600' : 'text-green-600'}`;
+        }
+
+        function applyInputMasks() {
+            const masks = {
+                'register-whatsapp': value => value.replace(/\D/g, '').replace(/(\d{2})(\d)/, '($1) $2').replace(/(\d{5})(\d)/, '$1-$2').slice(0, 15),
+                'register-cpf': value => value.replace(/\D/g, '').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2').slice(0, 14),
+                'register-cnpj': value => value.replace(/\D/g, '').replace(/(\d{2})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1/$2').replace(/(\d{4})(\d{1,2})$/, '$1-$2').slice(0, 18)
+            };
+            Object.keys(masks).forEach(id => {
+                const input = document.getElementById(id);
+                if (input) {
+                    input.addEventListener('input', (e) => {
+                        e.target.value = masks[id](e.target.value);
+                    });
                 }
+            });
+        }
+        
+        // --- Lógica do Formulário Multi-Step ---
+        function showStep(stepIndex) {
+            steps.forEach((step, index) => {
+                step.classList.toggle('hidden-left', index < stepIndex);
+                step.classList.toggle('hidden-right', index > stepIndex);
             });
             currentStep = stepIndex;
         }
-        
+
         function validateStep(stepIndex) {
             const inputs = steps[stepIndex].querySelectorAll('input[required]');
             for (const input of inputs) {
                 if (!input.value.trim()) {
-                    showMessage(`O campo "${input.previousElementSibling.textContent.trim()}" é obrigatório.`, true);
+                    showMessage(`O campo "${input.labels[0].textContent}" é obrigatório.`, true);
                     input.focus();
                     return false;
                 }
             }
-            if (stepIndex === 2) { // Último passo, verificar senhas
-                 const password = document.getElementById('register-password').value;
-                 const confirmPassword = document.getElementById('confirm-password').value;
-                 if (password !== confirmPassword) {
-                     showMessage('As senhas não coincidem.', true);
-                     return false;
-                 }
+
+            if (stepIndex === 2) {
+                const password = document.getElementById('register-password');
+                const confirmPassword = document.getElementById('confirm-password');
+
+                if (password.value.length < 6) {
+                    showMessage('A senha deve ter no mínimo 6 caracteres.', true);
+                    password.focus();
+                    return false;
+                }
+                if (password.value !== confirmPassword.value) {
+                    showMessage('As senhas não coincidem.', true);
+                    confirmPassword.focus();
+                    return false;
+                }
             }
             return true;
         }
 
-        nextButtons.forEach((button, index) => {
-            button.addEventListener('click', () => {
-                if (validateStep(index)) {
-                    showMessage(''); // Limpa mensagens de erro
-                    showStep(index + 1, 'forward');
+        // --- Lógica de Navegação e Submissão ---
+        function setupEventListeners() {
+            toggleLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('');
+                const isLoginVisible = !loginForm.classList.contains('hidden-left');
+
+                if (isLoginVisible) {
+                    loginForm.classList.add('hidden-left');
+                    registerForm.classList.remove('hidden-right');
+                    showStep(0);
+                    formTitle.textContent = 'Crie sua conta';
+                    toggleLink.innerHTML = 'Já tem uma conta? <strong>Acesse aqui</strong>';
+                } else {
+                    loginForm.classList.remove('hidden-left');
+                    registerForm.classList.add('hidden-right');
+                    formTitle.textContent = 'Acesse sua conta';
+                    toggleLink.innerHTML = 'Não tem uma conta? <strong>Crie gratuitamente</strong>';
                 }
             });
-        });
-        
-        backButtons.forEach((button, index) => {
-             button.addEventListener('click', () => {
-                showMessage(''); // Limpa mensagens de erro
-                showStep(index, 'backward');
-            });
-        });
 
-        // --- Manipula a tecla Enter para avançar nos passos ---
-        registerForm.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault(); // Impede o envio padrão do formulário
-                
-                if (currentStep < 2) { // Se não estiver no último passo (passos 0 e 1)
-                    if (validateStep(currentStep)) {
-                        showMessage(''); // Limpa mensagens de erro
-                        showStep(currentStep + 1, 'forward');
+            nextButtons.forEach((button, index) => {
+                button.addEventListener('click', () => {
+                    if (validateStep(index)) {
+                        showMessage('');
+                        showStep(index + 1);
                     }
-                } else { // No último passo (passo 2)
-                    // simula o clique no botão de submit final
-                    registerForm.querySelector('button[type="submit"]').click();
-                }
-            }
-        });
+                });
+            });
 
-
-        function showMessage(message, isError = false) {
-            messageArea.textContent = message;
-            messageArea.className = isError 
-                ? 'mt-4 text-sm text-center text-red-600' 
-                : 'mt-4 text-sm text-center text-green-600';
+            backButtons.forEach((button, index) => {
+                button.addEventListener('click', () => {
+                    showMessage('');
+                    showStep(index);
+                });
+            });
+            
+            loginForm.addEventListener('submit', handleLogin);
+            registerForm.addEventListener('submit', handleRegister);
         }
 
-        toggleLink.addEventListener('click', (e) => {
+        async function handleLogin(e) {
             e.preventDefault();
-            messageArea.textContent = '';
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
             
-            const isLoginVisible = !loginForm.classList.contains('back-step') && !loginForm.classList.contains('hidden-step');
+            const { error } = await supabase.auth.signInWithPassword({ email, password });
 
-            if (isLoginVisible) {
-                // Esconde Login, Mostra Cadastro
-                loginForm.classList.add('back-step');
-                registerForm.classList.remove('hidden-step');
-                showStep(0); // Garante que o cadastro comece do passo 1
-                formTitle.textContent = 'Crie sua conta';
-                toggleLink.innerHTML = 'Já tem uma conta? <strong>Acesse aqui</strong>';
-            } else {
-                // Esconde Cadastro, Mostra Login
-                registerForm.classList.add('hidden-step');
-                loginForm.classList.remove('back-step');
-                formTitle.textContent = 'Acesse sua conta';
-                toggleLink.innerHTML = 'Não tem uma conta? <strong>Crie gratuitamente</strong>';
+            if (error) {
+                return showMessage('Email ou senha inválidos.', true);
             }
-        });
+            
+            window.location.href = 'dashboard.html';
+        }
 
-        registerForm.addEventListener('submit', async (e) => {
+        async function handleRegister(e) {
             e.preventDefault();
             if (!validateStep(2)) return;
 
             const name = document.getElementById('register-name').value;
-            const whatsapp = document.getElementById('register-whatsapp').value;
+            const whatsapp = document.getElementById('register-whatsapp').value.replace(/\D/g, '');
             const companyName = document.getElementById('register-company-name').value;
             const segment = document.getElementById('register-segment').value;
-            const cnpj = document.getElementById('register-cnpj').value;
-            const cpf = document.getElementById('register-cpf').value;
+            const cnpj = document.getElementById('register-cnpj').value.replace(/\D/g, '');
+            const cpf = document.getElementById('register-cpf').value.replace(/\D/g, '');
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
 
-            const { data, error } = await supabase.auth.signUp({ email, password });
-
-            if (error) {
-                return showMessage(`Erro no cadastro: ${error.message}`, true);
-            }
-            
             const companyData = {
                 nome_responsavel: name,
                 whatsapp_responsavel: whatsapp,
@@ -333,46 +315,31 @@
                 cnpj: cnpj,
                 cpf: cpf
             };
-            localStorage.setItem('pendingCompanyData', JSON.stringify(companyData));
+            
+            // A mágica acontece aqui: os dados da empresa são enviados como metadados do usuário.
+            const { error } = await supabase.auth.signUp({
+                email,
+                password,
+                options: {
+                    data: companyData
+                }
+            });
 
-            showMessage('Cadastro realizado! Verifique seu email para confirmar a conta e depois faça o login.');
+            if (error) {
+                return showMessage(`Erro: ${error.message}`, true);
+            }
+
+            showMessage('Cadastro realizado! Verifique seu email para confirmar a conta.');
             
             setTimeout(() => {
-                 toggleLink.click();
+                toggleLink.click(); // Volta para a tela de login
             }, 5000);
-        });
+        }
 
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-            
-            if (error) {
-                return showMessage(`Erro no login: ${error.message}`, true);
-            }
-
-            if (data.user) {
-                const pendingData = localStorage.getItem('pendingCompanyData');
-                if (pendingData) {
-                    try {
-                        const companyData = JSON.parse(pendingData);
-                        const { error: insertError } = await supabase
-                            .from('empresas')
-                            .insert({ ...companyData, user_id: data.user.id });
-
-                        if (insertError) {
-                            throw insertError;
-                        }
-                        localStorage.removeItem('pendingCompanyData');
-                    } catch (dbError) {
-                        return showMessage(`Erro ao finalizar cadastro da empresa: ${dbError.message}`, true);
-                    }
-                }
-                window.location.href = 'dashboard.html';
-            }
-        });
+        // --- Inicialização ---
+        applyInputMasks();
+        setupEventListeners();
     </script>
-</body>
+    
+    </body>
 </html>
