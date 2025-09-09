@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Controle - Avalia Aí</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Biblioteca para gerar QR Code -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1/build/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .stat-card {
+            @apply bg-white p-6 rounded-lg shadow-md text-center;
+        }
+        .stat-value {
+            @apply text-3xl font-bold text-indigo-600;
+        }
+        .stat-label {
+            @apply text-sm font-medium text-gray-500 mt-1;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div id="loader" class="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
+        <svg class="animate-spin h-8 w-8 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+    </div>
+
+    <div id="dashboard-content" class="hidden">
+        <header class="bg-white shadow-sm">
+            <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+                <h1 class="text-2xl font-bold text-gray-900">
+                    Painel de Controle
+                </h1>
+                <button id="logout-button" class="text-sm font-medium text-indigo-600 hover:text-indigo-800">Sair</button>
+            </div>
+        </header>
+
+        <main class="py-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+                     <h2 class="text-xl font-semibold text-gray-800">Olá, <span id="company-name" class="text-indigo-600">...</span>!</h2>
+                     <p class="text-gray-600 mt-2">Este é o seu link exclusivo para receber avaliações de seus clientes. Imprima o QR Code e deixe-o visível no seu balcão.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Coluna do QR Code e Link -->
+                    <div class="lg:col-span-1 bg-white p-6 rounded-lg shadow-md flex flex-col items-center">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Seu QR Code de Avaliação</h3>
+                        <div id="qrcode-container" class="p-4 border rounded-lg">
+                            <!-- O QR Code será inserido aqui -->
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">Aponte a câmera para testar</p>
+                        
+                        <div class="mt-6 w-full">
+                             <label for="evaluation-link" class="block text-sm font-medium text-gray-700">Seu link único:</label>
+                             <div class="mt-1 flex rounded-md shadow-sm">
+                                 <input type="text" id="evaluation-link" class="flex-1 block w-full rounded-none rounded-l-md sm:text-sm border-gray-300 bg-gray-50 p-2" readonly>
+                                 <button id="copy-link-button" class="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-100 text-sm font-medium text-gray-700 hover:bg-gray-200">Copiar</button>
+                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Coluna de Estatísticas e Avaliações -->
+                    <div class="lg:col-span-2 space-y-8">
+                        <!-- Stats -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div class="stat-card">
+                                <p id="average-rating" class="stat-value">0.0</p>
+                                <p class="stat-label">Média de Avaliações</p>
+                            </div>
+                             <div class="stat-card">
+                                <p id="total-ratings" class="stat-value">0</p>
+                                <p class="stat-label">Total de Avaliações</p>
+                            </div>
+                        </div>
+
+                        <!-- Lista de Avaliações -->
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Últimas Avaliações</h3>
+                            <ul id="reviews-list" class="space-y-4">
+                                <!-- Avaliações serão inseridas aqui -->
+                                <li id="no-reviews-message" class="text-center text-gray-500 py-4">Ainda não há avaliações.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+        const SUPABASE_URL = 'https://uufwwbsuljjhaqhpyilg.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1Znd3YnN1bGpqaGFxaHB5aWxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0Mzg0NDEsImV4cCI6MjA3MzAxNDQ0MX0.NqvvWYFIIXjVU7y4OvkLxE-ozg0PX2MFCJqo6gD0KQQ';
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Elementos da UI
+        const loader = document.getElementById('loader');
+        const dashboardContent = document.getElementById('dashboard-content');
+        const companyNameEl = document.getElementById('company-name');
+        const evaluationLinkEl = document.getElementById('evaluation-link');
+        const qrcodeContainer = document.getElementById('qrcode-container');
+        const copyLinkButton = document.getElementById('copy-link-button');
+        const averageRatingEl = document.getElementById('average-rating');
+        const totalRatingsEl = document.getElementById('total-ratings');
+        const reviewsListEl = document.getElementById('reviews-list');
+        const noReviewsMessage = document.getElementById('no-reviews-message');
+        const logoutButton = document.getElementById('logout-button');
+        
+        async function loadDashboardData() {
+            const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+            if (sessionError || !session) {
+                console.log('Nenhuma sessão encontrada, redirecionando para login.');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const user = session.user;
+
+            // 1. Buscar dados da empresa
+            const { data: empresa, error: empresaError } = await supabase
+                .from('empresas')
+                .select('*')
+                .eq('user_id', user.id)
+                .single(); // Esperamos apenas um resultado
+
+            if (empresaError || !empresa) {
+                console.error('Erro ao buscar dados da empresa:', empresaError);
+                // Pode ser que o cadastro não foi finalizado, redirecionar ou mostrar erro
+                if(empresaError && empresaError.code === 'PGRST116'){
+                    alert("Parece que seu cadastro não foi finalizado. Tente relogar ou contate o suporte.");
+                }
+                loader.classList.add('hidden');
+                return;
+            }
+            
+            // 2. Popular informações da empresa
+            companyNameEl.textContent = empresa.nome_empresa;
+            const domain = 'avaliaai.prismeapp.com.br'; // Seu domínio
+            const evaluationLink = `https://${domain}/avaliar.html?slug=${empresa.slug_url}`;
+            evaluationLinkEl.value = evaluationLink;
+
+            // 3. Gerar QR Code
+            QRCode.toCanvas(evaluationLink, { width: 200, margin: 1 }, function (error, canvas) {
+                if (error) console.error(error);
+                qrcodeContainer.innerHTML = ''; // Limpa o container
+                canvas.classList.add('w-full', 'h-auto');
+                qrcodeContainer.appendChild(canvas);
+            });
+            
+            // 4. Buscar avaliações
+            const { data: avaliacoes, error: avaliacoesError } = await supabase
+                .from('avaliacoes')
+                .select('nota, created_at')
+                .eq('empresa_id', empresa.id)
+                .order('created_at', { ascending: false });
+
+            if (avaliacoesError) {
+                console.error('Erro ao buscar avaliações:', avaliacoesError);
+            }
+
+            // 5. Calcular estatísticas e mostrar avaliações
+            if (avaliacoes && avaliacoes.length > 0) {
+                noReviewsMessage.classList.add('hidden');
+                
+                const total = avaliacoes.length;
+                const sum = avaliacoes.reduce((acc, curr) => acc + curr.nota, 0);
+                const average = (sum / total).toFixed(1);
+
+                totalRatingsEl.textContent = total;
+                averageRatingEl.textContent = average;
+                
+                // Limpa a lista antes de adicionar novos itens
+                reviewsListEl.innerHTML = ''; 
+
+                avaliacoes.slice(0, 5).forEach(review => { // Mostra as 5 mais recentes
+                    const li = document.createElement('li');
+                    li.className = 'flex justify-between items-center border-b pb-2';
+                    
+                    const ratingStars = '⭐️'.repeat(review.nota) + '⚫️'.repeat(5 - review.nota);
+                    const reviewDate = new Date(review.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+
+                    li.innerHTML = `
+                        <span class="text-yellow-500">${ratingStars}</span>
+                        <span class="text-sm text-gray-500">${reviewDate}</span>
+                    `;
+                    reviewsListEl.appendChild(li);
+                });
+
+            } else {
+                 noReviewsMessage.classList.remove('hidden');
+            }
+
+
+            // Exibe o conteúdo do dashboard
+            loader.classList.add('hidden');
+            dashboardContent.classList.remove('hidden');
+        }
+
+        // Event Listeners
+        copyLinkButton.addEventListener('click', () => {
+            evaluationLinkEl.select();
+            document.execCommand('copy');
+            copyLinkButton.textContent = 'Copiado!';
+            setTimeout(() => { copyLinkButton.textContent = 'Copiar'; }, 2000);
+        });
+
+        logoutButton.addEventListener('click', async () => {
+            await supabase.auth.signOut();
+            window.location.href = 'index.html';
+        });
+
+        // Iniciar o carregamento dos dados
+        document.addEventListener('DOMContentLoaded', loadDashboardData);
+    </script>
+</body>
+</html>
