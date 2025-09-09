@@ -156,7 +156,6 @@
             // 1. Fetch Company Data
             const { data: company, error: companyError } = await supabase
                 .from('empresas')
-                // CORREÇÃO: Revertendo para select('*') que funcionava antes do rebranding.
                 .select('*')
                 .eq('user_id', user.id)
                 .single();
@@ -171,7 +170,16 @@
 
             // Gerar o link e QR Code somente após ter os dados da empresa
             companyNameTitle.textContent = company.nome_empresa;
-            const evaluationLink = `https://avaliaai.prismeapp.com.br/avaliar.html?slug=${company.slug}`;
+            
+            // CORREÇÃO: Usando 'slug_url' para corresponder ao código original que funcionava.
+            const slug = company.slug_url || company.slug; // Garantia extra para ambos os casos
+            if (!slug) {
+                console.error("Slug não encontrado nos dados da empresa:", company);
+                evaluationLinkEl.value = 'Erro: Slug da empresa não encontrado.';
+                return;
+            }
+
+            const evaluationLink = `https://avaliaai.prismeapp.com.br/avaliar.html?slug=${slug}`;
             evaluationLinkEl.value = evaluationLink;
             copyButton.disabled = false;
 
@@ -233,7 +241,7 @@
             document.execCommand('copy');
             copyButton.textContent = 'Copiado!';
             setTimeout(() => {
-                copyButton.textContent = 'Copiar';
+                copy-button.textContent = 'Copiar';
             }, 2000);
         });
         
