@@ -258,10 +258,14 @@
         registerForm.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault(); // Impede o envio padrão do formulário
-                if (currentStep < 2) { // Se não estiver no último passo
-                    nextButtons[currentStep].click(); // Simula o clique no botão "Continuar"
-                } else {
-                    // No último passo, simula o clique no botão de submit final
+                
+                if (currentStep < 2) { // Se não estiver no último passo (passos 0 e 1)
+                    if (validateStep(currentStep)) {
+                        showMessage(''); // Limpa mensagens de erro
+                        showStep(currentStep + 1, 'forward');
+                    }
+                } else { // No último passo (passo 2)
+                    // simula o clique no botão de submit final
                     registerForm.querySelector('button[type="submit"]').click();
                 }
             }
