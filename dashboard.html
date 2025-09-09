@@ -24,6 +24,7 @@
     </style>
 </head>
 <body class="bg-gray-100">
+
     <div id="loader" class="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
         <svg class="animate-spin h-8 w-8 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -47,7 +48,7 @@
                      <h2 class="text-xl font-semibold text-gray-800">Olá, <span id="company-name" class="text-indigo-600">...</span>!</h2>
                      <p class="text-gray-600 mt-2">Este é o seu link exclusivo para receber avaliações de seus clientes. Imprima o QR Code e deixe-o visível no seu balcão.</p>
                 </div>
-
+                
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <!-- Coluna do QR Code e Link -->
                     <div class="lg:col-span-1 bg-white p-6 rounded-lg shadow-md flex flex-col items-center">
@@ -56,12 +57,12 @@
                             <!-- O QR Code será inserido aqui -->
                         </div>
                         <p class="text-xs text-gray-500 mt-2">Aponte a câmera para testar</p>
-
+                        
                         <div class="mt-6 w-full">
                              <label for="evaluation-link" class="block text-sm font-medium text-gray-700">Seu link único:</label>
                              <div class="mt-1 flex rounded-md shadow-sm">
-                                  <input type="text" id="evaluation-link" class="flex-1 block w-full rounded-none rounded-l-md sm:text-sm border-gray-300 bg-gray-50 p-2" readonly>
-                                  <button id="copy-link-button" class="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-100 text-sm font-medium text-gray-700 hover:bg-gray-200">Copiar</button>
+                                 <input type="text" id="evaluation-link" class="flex-1 block w-full rounded-none rounded-l-md sm:text-sm border-gray-300 bg-gray-50 p-2" readonly>
+                                 <button id="copy-link-button" class="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-100 text-sm font-medium text-gray-700 hover:bg-gray-200">Copiar</button>
                              </div>
                         </div>
                     </div>
@@ -79,6 +80,7 @@
                                 <p class="stat-label">Total de Avaliações</p>
                             </div>
                         </div>
+
                         <!-- Lista de Avaliações -->
                         <div class="bg-white p-6 rounded-lg shadow-md">
                             <h3 class="text-lg font-semibold text-gray-800 mb-4">Últimas Avaliações</h3>
@@ -96,7 +98,7 @@
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-        const SUPABASE_URL = 'https://uufwwbsuljjhaqhpyilg. supabase.co';
+        const SUPABASE_URL = 'https://uufwwbsuljjhaqhpyilg.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1Znd3YnN1bGpqaGFxaHB5aWxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0Mzg0NDEsImV4cCI6MjA3MzAxNDQ0MX0.NqvvWYFIIXjVU7y4OvkLxE-ozg0PX2MFCJqo6gD0KQQ';
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -115,6 +117,7 @@
         
         async function loadDashboardData() {
             const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
             if (sessionError || !session) {
                 console.log('Nenhuma sessão encontrada, redirecionando para login.');
                 window.location.href = 'index.html';
@@ -132,6 +135,7 @@
 
             if (empresaError || !empresa) {
                 console.error('Erro ao buscar dados da empresa:', empresaError);
+                // Pode ser que o cadastro não foi finalizado, redirecionar ou mostrar erro
                 if(empresaError && empresaError.code === 'PGRST116'){
                     alert("Parece que seu cadastro não foi finalizado. Tente relogar ou contate o suporte.");
                 }
@@ -152,7 +156,7 @@
                 canvas.classList.add('w-full', 'h-auto');
                 qrcodeContainer.appendChild(canvas);
             });
-
+            
             // 4. Buscar avaliações
             const { data: avaliacoes, error: avaliacoesError } = await supabase
                 .from('avaliacoes')
@@ -177,6 +181,7 @@
                 
                 // Limpa a lista antes de adicionar novos itens
                 reviewsListEl.innerHTML = ''; 
+
                 avaliacoes.slice(0, 5).forEach(review => { // Mostra as 5 mais recentes
                     const li = document.createElement('li');
                     li.className = 'flex justify-between items-center border-b pb-2';
@@ -190,9 +195,11 @@
                     `;
                     reviewsListEl.appendChild(li);
                 });
+
             } else {
                  noReviewsMessage.classList.remove('hidden');
             }
+
 
             // Exibe o conteúdo do dashboard
             loader.classList.add('hidden');
@@ -217,4 +224,3 @@
     </script>
 </body>
 </html>
-
