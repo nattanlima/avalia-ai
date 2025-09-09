@@ -17,7 +17,7 @@
         }
         @keyframes spin {
             to {
-                transform: rotate(360deg);
+                transform: rotate(360deg );
             }
         }
     </style>
@@ -100,10 +100,11 @@
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
         
         // --- 1. CONFIGURAÇÃO E ELEMENTOS DO DOM ---
-        // VERIFIQUE: A URL abaixo deve estar exatamente assim, sem espaços.
         const SUPABASE_URL = 'https://uufwwbsuljjhaqhpyilg.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1Znd3YnN1bGpqaGFxaHB5aWxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0Mzg0NDEsImV4cCI6MjA3MzAxNDQ0MX0.NqvvWYIIXjVU7y4OvkLxE-ozg0PX2MFCJqo6gD0KQQ';
-        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // CHAVE CORRIGIDA ABAIXO
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1Znd3YnN1bGpqaGFxaHB5aWxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0Mzg0NDEsImV4cCI6MjA3MzAxNDQ0MX0.NqvvWYFIIXjVU7y4OvkLxE-ozg0PX2MFCJqo6gD0KQQ';
+        
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY );
 
         const loaderContainer = document.getElementById('loader-container');
         const dashboardContent = document.getElementById('dashboard-content');
@@ -136,13 +137,17 @@
                     .single();
 
                 if (companyError || !company) {
-                    throw new Error('Não foi possível carregar os dados da sua empresa. ' + (companyError?.message || ''));
+                    // Melhorando a mensagem de erro para ser mais específica
+                    if (companyError) {
+                        throw new Error(`Não foi possível carregar os dados da sua empresa. Detalhe: ${companyError.message}`);
+                    }
+                    throw new Error('Não foi possível carregar os dados da sua empresa. Verifique se o cadastro foi concluído.');
                 }
 
                 // ATUALIZA NOME DA EMPRESA E LINK DE AVALIAÇÃO
                 companyNameEl.textContent = company.nome_empresa;
                 
-                const slug = company.slug_url; // Usando a coluna correta
+                const slug = company.slug_url;
                 if (!slug) {
                     throw new Error('O slug da sua empresa não foi encontrado.');
                 }
@@ -155,7 +160,7 @@
                     value: evaluationLink,
                     size: 160,
                     padding: 10,
-                });
+                } );
 
                 // BUSCA AVALIAÇÕES
                 const { data: ratings, error: ratingsError } = await supabase
@@ -191,6 +196,7 @@
                 averageRatingEl.textContent = 'N/A';
                 totalRatingsEl.textContent = '0';
                 noRatingsMessage.classList.remove('hidden');
+                ratingsTableBody.innerHTML = ''; // Garante que a tabela esteja limpa
                 return;
             }
 
@@ -200,7 +206,9 @@
             averageRatingEl.textContent = average;
             totalRatingsEl.textContent = ratings.length;
 
-            ratingsTableBody.innerHTML = ''; // Limpa a tabela
+            ratingsTableBody.innerHTML = ''; // Limpa a tabela antes de adicionar novas linhas
+            noRatingsMessage.classList.add('hidden'); // Esconde a mensagem de "sem avaliações"
+
             ratings.forEach(rating => {
                 const date = new Date(rating.created_at).toLocaleDateString('pt-BR', {
                     day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
@@ -235,4 +243,3 @@
     </script>
 </body>
 </html>
-
