@@ -156,7 +156,8 @@
             // 1. Fetch Company Data
             const { data: company, error: companyError } = await supabase
                 .from('empresas')
-                .select('*')
+                // CORREÇÃO: Selecionando colunas explicitamente para maior robustez
+                .select('id, nome_empresa, slug')
                 .eq('user_id', user.id)
                 .single();
 
@@ -168,7 +169,7 @@
                 return;
             }
 
-            // CORREÇÃO: Gerar o link e QR Code somente após ter os dados da empresa
+            // Gerar o link e QR Code somente após ter os dados da empresa
             companyNameTitle.textContent = company.nome_empresa;
             const evaluationLink = `https://avaliaai.prismeapp.com.br/avaliar.html?slug=${company.slug}`;
             evaluationLinkEl.value = evaluationLink;
@@ -245,7 +246,6 @@
         document.getElementById('logout-button-mobile').addEventListener('click', logout);
 
         main();
-    </script>
-</body>
+    </script></body>
 </html>
 
