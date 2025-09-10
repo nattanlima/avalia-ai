@@ -1,0 +1,27 @@
+{
+  "name": "Avalia Aí",
+  "short_name": "Avalia Aí",
+  "description": "Aplicativo para avaliação de atendimento.",
+  "start_url": "/avalia-ai/?utm_source=pwa",
+  "display": "standalone",
+  "background_color": "#f3f4f6",
+  "theme_color": "#4f46e5",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/nattanlima/avalia-ai/main/icons/icon-192-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://raw.githubusercontent.com/nattanlima/avalia-ai/main/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "https://raw.githubusercontent.com/nattanlima/avalia-ai/main/icons/icon-192-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
