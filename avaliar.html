@@ -51,6 +51,21 @@
              color: white;
              border-color: #4f46e5;
         }
+        
+        /* NOVO: Animação de pulso para o botão de lead */
+        @keyframes pulse-animation {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+            50% {
+                transform: scale(1.02);
+                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+            }
+        }
+        .animate-pulse-effect {
+            animation: pulse-animation 2s infinite;
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4">
@@ -108,7 +123,7 @@
 
                 <!-- Botão para iniciar captura de lead -->
                 <div id="lead-prompt" class="pt-4">
-                     <button id="show-lead-form-btn" class="w-full flex items-center justify-center gap-3 bg-green-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-600 transition-colors">
+                     <button id="show-lead-form-btn" class="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 animate-pulse-effect">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 14c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.7-.8.9-.1.1-.3.2-.5.1-.2-.1-.9-.3-1.8-1.1-.7-.6-1.1-1.4-1.3-1.6-.1-.2 0-.4.1-.5l.4-.5c.1-.1.2-.2.3-.4.1-.1.1-.2 0-.4-.1-.2-.6-1.5-.8-2.1-.2-.5-.4-.5-.6-.5h-.5c-.2 0-.5.2-.6.4-.2.2-.7.7-.7 1.6 0 .9.7 1.9.8 2 .1.1 1.4 2.2 3.4 3s1.4.3 1.9.3c.5 0 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2zM12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/></svg>
                         RECEBA DESCONTOS EXCLUSIVOS
                     </button>
@@ -164,14 +179,12 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1Znd3YnN1bGpqaGFxaHB5aWxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0Mzg0NDEsImV4cCI6MjA3MzAxNDQ0MX0.NqvvWYFIIXjVU7y4OvkLxE-ozg0PX2MFCJqo6gD0KQQ';
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Elementos da UI
         const loader = document.getElementById('loader');
         const evaluationContent = document.getElementById('evaluation-content');
         const companyNameEl = document.getElementById('company-name');
         const successSection = document.getElementById('success-section');
         const errorMessage = document.getElementById('error-message');
         const ratingButtons = document.querySelectorAll('.rating-btn');
-        // Novos elementos para captura de lead
         const showLeadFormBtn = document.getElementById('show-lead-form-btn');
         const leadForm = document.getElementById('lead-form');
         const whatsappInput = document.getElementById('whatsapp-input');
@@ -181,9 +194,8 @@
         let empresaId = null;
         let avaliacaoId = null;
         let ratingSubmitted = false;
-        let refreshTimer = null; // Para controlar o refresh
+        let refreshTimer = null;
         
-        // --- CÓDIGO PWA ---
         const installContainer = document.getElementById('install-container');
         const installButton = document.getElementById('install-button');
         let deferredPrompt;
@@ -213,7 +225,6 @@
             deferredPrompt = null;
         });
 
-        // --- LÓGICA DA PÁGINA ---
         async function initializePage() {
             const params = new URLSearchParams(window.location.search);
             const slug = params.get('slug');
@@ -263,10 +274,9 @@
             evaluationContent.classList.add('hidden');
             successSection.classList.remove('hidden');
             
-            // Inicia o timer para recarregar a página
             refreshTimer = setTimeout(() => {
                 window.location.reload();
-            }, 8000); // Aumenta o tempo para o usuário ter chance de se inscrever
+            }, 8000);
         }
 
         async function submitRating(nota, selectedButton) {
@@ -288,7 +298,7 @@
                 const { data, error } = await supabase
                     .from('avaliacoes')
                     .insert({ empresa_id: empresaId, nota: nota })
-                    .select('id') // Pede o ID da avaliação recém-criada
+                    .select('id')
                     .single();
 
                 loader.classList.add('hidden');
@@ -297,28 +307,20 @@
                     console.error('Erro ao salvar avaliação:', error);
                     showError();
                 } else {
-                    avaliacaoId = data.id; // Salva o ID da avaliação
+                    avaliacaoId = data.id;
                     showSuccess();
                 }
             }, 500);
         }
-
-        // --- NOVA LÓGICA PARA LEADS ---
-
-        // Apenas números no input de WhatsApp
         whatsappInput.addEventListener('input', (e) => {
             e.target.value = e.target.value.replace(/\D/g, '');
         });
-
-        // Mostra o formulário de lead
         showLeadFormBtn.addEventListener('click', () => {
-            clearTimeout(refreshTimer); // Para o refresh automático
+            clearTimeout(refreshTimer);
             leadPrompt.classList.add('hidden');
             leadForm.classList.remove('hidden');
             whatsappInput.focus();
         });
-
-        // Envia o formulário de lead
         leadForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const whatsappNumber = whatsappInput.value;
@@ -328,7 +330,6 @@
                 return;
             }
             
-            // Mostra um feedback de carregamento no botão
             const submitBtn = leadForm.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
             submitBtn.textContent = 'Enviando...';
@@ -350,13 +351,10 @@
             } else {
                 leadForm.classList.add('hidden');
                 leadSuccessMessage.classList.remove('hidden');
-                // Inicia um novo timer para o refresh final
                 setTimeout(() => window.location.reload(), 3000);
             }
         });
         
-        // --- FIM DA LÓGICA PARA LEADS ---
-
         ratingButtons.forEach(button => {
             button.addEventListener('click', (e) => {
                 const selectedValue = e.currentTarget.dataset.value;
