@@ -197,7 +197,23 @@
         async function initializePage() {
             const params = new URLSearchParams(window.location.search);
             const slug = params.get('slug');
+            const lastUrl = localStorage.getItem('lastVisitedUrl');
 
+            // Se o app for iniciado pelo ícone (sem slug) e houver uma URL de cliente salva,
+            // redireciona para a última página de cliente visitada.
+            if (!slug && lastUrl) {
+                window.location.replace(lastUrl);
+                return; // Para a execução para o redirecionamento ocorrer.
+            }
+
+            // Se o usuário estiver em uma página de cliente (com slug),
+            // salva esta URL para futuros inícios do app.
+            if (slug) {
+                localStorage.setItem('lastVisitedUrl', window.location.href);
+            }
+
+            // A lógica original continua: se, após as verificações, ainda não houver slug, mostra erro.
+            // Isso cobre o caso de um primeiro acesso sem um link de cliente específico.
             if (!slug) {
                 showError();
                 return;
@@ -287,3 +303,4 @@
     </script>
 </body>
 </html>
+
