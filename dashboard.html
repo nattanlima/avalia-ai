@@ -22,6 +22,20 @@
                 transform: rotate(360deg);
             }
         }
+        /* Estilos para a barra de rolagem do modal */
+        .modal-body::-webkit-scrollbar {
+            width: 8px;
+        }
+        .modal-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .modal-body::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        .modal-body::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -33,7 +47,7 @@
     </div>
 
     <!-- Conteúdo do Dashboard (inicialmente oculto) -->
-    <div id="dashboard-content" class="hidden">
+    <div id="dashboard-content" class="hidden flex flex-col min-h-screen">
         <header class="bg-white shadow-sm">
             <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
                 <h1 class="text-2xl font-bold text-gray-900">
@@ -43,7 +57,7 @@
             </div>
         </header>
         
-        <main class="py-10">
+        <main class="py-10 flex-grow">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="bg-white p-6 rounded-lg shadow-md mb-8">
                     <h2 class="text-xl font-semibold text-gray-800">Olá, <span id="company-name" class="text-green-600">...</span>!</h2>
@@ -77,7 +91,6 @@
                     </div>
                 </div>
 
-                <!-- Gráfico de Avaliações -->
                 <div class="bg-white p-6 rounded-lg shadow-md mb-8">
                     <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4 gap-4">
                         <h3 class="text-lg font-semibold text-gray-800">Média de Avaliações por Dia</h3>
@@ -109,6 +122,67 @@
                 </div>
             </div>
         </main>
+
+        <footer class="text-center py-6 px-4">
+            <p class="text-sm text-gray-500">
+                © 2025 Prisme Sales. Todos os direitos reservados. 
+                <a href="#" id="open-terms-modal" class="text-green-600 hover:underline">Termos de Uso e Privacidade</a>
+            </p>
+        </footer>
+    </div>
+
+    <!-- Modal para os Termos de Uso -->
+    <div id="terms-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b">
+                <h2 class="text-xl font-bold text-gray-800">Termos de Uso e Política de Privacidade</h2>
+                <button id="close-terms-modal-x" class="text-2xl font-bold text-gray-500 hover:text-gray-800">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto modal-body space-y-4 text-gray-600 text-sm">
+                <h3 class="font-bold text-lg text-gray-700">Termos de Uso e Política de Privacidade - Prisme Avalia Ai!</h3>
+                <p><strong>Última atualização:</strong> 10 de setembro de 2025</p>
+                <p>Bem-vindo(a) ao <strong>Prisme Avalia Ai!</strong>, uma plataforma desenvolvida e fornecida por <strong>PRISME SALES</strong>, pessoa jurídica de direito privado, inscrita no CNPJ sob o nº 34.322.622/0001-58.</p>
+                <p>Estes Termos de Uso e Política de Privacidade ("Termos") regem o seu acesso e uso da nossa plataforma de coleta de avaliações de atendimento ("Plataforma" ou "Serviço"). Ao se cadastrar e utilizar nossos Serviços, você concorda em cumprir e estar vinculado a estes Termos.</p>
+                <h4 class="font-bold text-md text-gray-700 pt-2">1. Objeto do Serviço</h4>
+                <p>A Plataforma Prisme Avalia Ai! oferece a empresas ("Usuário Contratante") uma ferramenta para coletar feedback de seus clientes ("Cliente Final") sobre a qualidade do atendimento, por meio de um sistema de avaliação de 1 a 5 estrelas, acessível via link único e QR Code.</p>
+                <h4 class="font-bold text-md text-gray-700 pt-2">2. Cadastro e Conta do Usuário Contratante</h4>
+                <p>2.1. Para utilizar os Serviços, você deve fornecer informações de cadastro precisas, completas e atualizadas, incluindo nome do responsável, WhatsApp, nome da empresa, seguimento, CNPJ e CPF do responsável.</p>
+                <p>2.2. Você é o único responsável pela segurança de sua senha e por todas as atividades que ocorrem em sua conta. A PRISME SALES não será responsável por quaisquer perdas ou danos decorrentes do seu descumprimento desta obrigação.</p>
+                <h4 class="font-bold text-md text-gray-700 pt-2">3. Coleta e Tratamento de Dados (LGPD)</h4>
+                <p>A PRISME SALES leva a sério a sua privacidade e está em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018).</p>
+                <p><strong>3.1. Dados Coletados do Usuário Contratante:</strong><br>
+                - <strong>Quais dados coletamos:</strong> Nome, e-mail, telefone/WhatsApp, CPF, nome da empresa, CNPJ e seguimento.<br>
+                - <strong>Finalidade:</strong> Criar e gerenciar sua conta, processar pagamentos futuros, fornecer suporte técnico, comunicar sobre atualizações do serviço e cumprir obrigações legais.<br>
+                - <strong>Base Legal:</strong> Execução de contrato, cumprimento de obrigação legal e legítimo interesse.</p>
+                <p><strong>3.2. Dados Coletados do Cliente Final:</strong><br>
+                - <strong>Quais dados coletamos:</strong> Coletamos apenas a avaliação (nota de 1 a 5 estrelas) e a data/hora em que foi realizada. A avaliação é anônima e não coletamos dados pessoais do Cliente Final neste momento.<br>
+                - <strong>Responsabilidade:</strong> O Usuário Contratante é responsável por informar ao seu Cliente Final que está utilizando uma ferramenta de terceiros para coletar feedback de atendimento.</p>
+                <p><strong>3.3. Futura Coleta de Dados de WhatsApp do Cliente Final:</strong><br>
+                - Fica estabelecido que a Plataforma poderá, futuramente, oferecer um módulo adicional que permitirá ao Cliente Final, <strong>de forma voluntária e mediante consentimento explícito</strong>, fornecer seu número de WhatsApp após realizar uma avaliação.<br>
+                - <strong>Finalidade:</strong> O número fornecido será utilizado exclusivamente para que o Usuário Contratante possa enviar uma mensagem de agradecimento ou oferta, via API de integração. A PRISME SALES atuará apenas como operadora desses dados, e o Usuário Contratante será o controlador, responsável pelo conteúdo e legalidade do contato.<br>
+                - <strong>Consentimento:</strong> A funcionalidade só será ativada mediante consentimento livre, informado e inequívoco do Cliente Final.</p>
+                <p><strong>3.4. Armazenamento e Segurança:</strong><br>
+                - Os dados são armazenados em servidores seguros (Supabase) e utilizamos medidas técnicas e administrativas para proteger seus dados contra acesso não autorizado, perda ou destruição.</p>
+                <p><strong>3.5. Direitos do Titular:</strong><br>
+                - Você, Usuário Contratante, tem o direito de acessar, corrigir, excluir ou solicitar a portabilidade de seus dados a qualquer momento, entrando em contato conosco.</p>
+                <h4 class="font-bold text-md text-gray-700 pt-2">4. Pagamentos e Assinatura</h4>
+                <p>4.1. O Serviço poderá ser oferecido através de um período de teste gratuito de 30 dias. Após este período, a continuidade do uso estará sujeita à contratação de um dos nossos planos pagos.</p>
+                <p>4.2. Os detalhes sobre preços, planos e formas de pagamento serão disponibilizados na Plataforma em momento oportuno.</p>
+                 <h4 class="font-bold text-md text-gray-700 pt-2">5. Propriedade Intelectual</h4>
+                <p>Todo o conteúdo, software, marcas e logotipos presentes na Plataforma são de propriedade exclusiva da PRISME SALES. É proibida a cópia, modificação ou distribuição de qualquer conteúdo sem nossa autorização prévia e por escrito.</p>
+                <h4 class="font-bold text-md text-gray-700 pt-2">6. Limitação de Responsabilidade</h4>
+                <p>A PRISME SALES não se responsabiliza por quaisquer danos diretos ou indiretos decorrentes do mau uso da Plataforma, da relação entre o Usuário Contratante e seu Cliente Final, ou por interrupções no serviço decorrentes de falhas de terceiros.</p>
+                <h4 class="font-bold text-md text-gray-700 pt-2">7. Alterações nos Termos</h4>
+                <p>Reservamo-nos o direito de modificar estes Termos a qualquer momento. Notificaremos os usuários sobre quaisquer alterações significativas. A continuidade do uso da Plataforma após as alterações constituirá sua aceitação dos novos Termos.</p>
+                <h4 class="font-bold text-md text-gray-700 pt-2">8. Foro e Legislação Aplicável</h4>
+                <p>Estes Termos serão regidos e interpretados de acordo com as leis da República Federativa do Brasil. Fica eleito o foro da comarca de Além Paraíba/MG para dirimir quaisquer controvérsias oriundas deste documento.</p>
+                <h4 class="font-bold text-md text-gray-700 pt-2">9. Contato</h4>
+                <p>Em caso de dúvidas sobre estes Termos, entre em contato conosco através do e-mail: <strong>contato@prismeapp.com.br</strong>.</p>
+            </div>
+            <div class="p-4 border-t text-right bg-gray-50">
+                <button id="close-modal-button" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700">Fechar</button>
+            </div>
+        </div>
     </div>
 
     <script type="module">
@@ -134,6 +208,11 @@
         const monthBtn = document.getElementById('month-btn');
         let ratingsChart = null;
 
+        const termsModal = document.getElementById('terms-modal');
+        const openTermsModalBtn = document.getElementById('open-terms-modal');
+        const closeTermsModalXBtn = document.getElementById('close-terms-modal-x');
+        const closeModalButton = document.getElementById('close-modal-button');
+
         async function loadDashboard() {
             try {
                 const { data: { session }, error: sessionError } = await supabase.auth.getSession();
@@ -149,7 +228,7 @@
                     .eq('user_id', user.id)
                     .single();
 
-                if (fetchError && fetchError.code === 'PGRST116') { // PGRST116 = not found
+                if (fetchError && fetchError.code === 'PGRST116') {
                     const companyMetadata = user.user_metadata;
                     if (!companyMetadata || !companyMetadata.nome_empresa) {
                          throw new Error('Dados de cadastro não encontrados. Por favor, tente se cadastrar novamente.');
@@ -194,7 +273,7 @@
                 
                 updateRatingsUI(ratings);
 
-            } catch (error) { // CORREÇÃO: Adicionando chaves de abertura e fechamento
+            } catch (error) {
                 console.error("Erro Crítico no Dashboard:", error);
                 document.body.innerHTML = `<div class="text-center p-8"><h1 class="text-2xl font-bold text-red-600">Ocorreu um Erro</h1><p class="text-gray-600 mt-2">${error.message}</p><p class="mt-4"><a href="index.html" class="text-green-600 underline">Voltar para o login</a></p></div>`;
             } finally {
@@ -334,6 +413,20 @@
         logoutButton.addEventListener('click', async () => {
             await supabase.auth.signOut();
             window.location.href = 'index.html';
+        });
+
+        openTermsModalBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            termsModal.classList.remove('hidden');
+        });
+
+        const closeModal = () => termsModal.classList.add('hidden');
+        closeTermsModalXBtn.addEventListener('click', closeModal);
+        closeModalButton.addEventListener('click', closeModal);
+        termsModal.addEventListener('click', (e) => {
+            if (e.target === termsModal) {
+                closeModal();
+            }
         });
 
         loadDashboard();
