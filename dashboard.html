@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -76,6 +77,20 @@
                     </div>
                 </div>
 
+                <!-- Gráfico de Avaliações -->
+                <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4 gap-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Média de Avaliações por Dia</h3>
+                        <div class="flex-shrink-0">
+                            <button id="week-btn" class="bg-indigo-600 text-white px-3 py-1.5 rounded-md text-sm font-medium focus:outline-none transition-colors">Semana</button>
+                            <button id="month-btn" class="bg-gray-200 text-gray-700 px-3 py-1.5 rounded-md text-sm font-medium ml-2 focus:outline-none transition-colors">Mês</button>
+                        </div>
+                    </div>
+                    <div class="relative h-64">
+                         <canvas id="ratings-chart"></canvas>
+                    </div>
+                </div>
+
                 <div class="bg-white p-6 rounded-lg shadow-md">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4">Últimas Avaliações Recebidas</h3>
                     <div class="overflow-x-auto">
@@ -102,7 +117,6 @@
         
         // --- 1. CONFIGURAÇÃO E ELEMENTOS DO DOM ---
         const SUPABASE_URL = 'https://uufwwbsuljjhaqhpyilg.supabase.co';
-        // CHAVE CORRIGIDA ABAIXO
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1Znd3YnN1bGpqaGFxaHB5aWxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0Mzg0NDEsImV4cCI6MjA3MzAxNDQ0MX0.NqvvWYFIIXjVU7y4OvkLxE-ozg0PX2MFCJqo6gD0KQQ';
         
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY );
@@ -118,6 +132,11 @@
         const noRatingsMessage = document.getElementById('no-ratings-message');
         const qrCanvas = document.getElementById('qr-code');
         const logoutButton = document.getElementById('logout-button');
+        const chartCanvas = document.getElementById('ratings-chart');
+        const weekBtn = document.getElementById('week-btn');
+        const monthBtn = document.getElementById('month-btn');
+        let ratingsChart = null;
+
 
         // --- 2. FUNÇÃO PRINCIPAL PARA CARREGAR DADOS ---
         async function loadDashboard() {
@@ -138,7 +157,6 @@
                     .single();
 
                 if (companyError || !company) {
-                    // Melhorando a mensagem de erro para ser mais específica
                     if (companyError) {
                         throw new Error(`Não foi possível carregar os dados da sua empresa. Detalhe: ${companyError.message}`);
                     }
@@ -174,7 +192,7 @@
                     throw new Error('Não foi possível carregar as avaliações. ' + ratingsError.message);
                 }
                 
-                // ATUALIZA ESTATÍSTICAS E TABELA
+                // ATUALIZA ESTATÍSTICAS, TABELA E GRÁFICO
                 updateRatingsUI(ratings);
 
             } catch (error) {
@@ -191,40 +209,135 @@
             }
         }
         
-        // --- 3. FUNÇÃO AUXILIAR PARA ATUALIZAR A UI ---
+        // --- 3. FUNÇÕES PARA ATUALIZAR A UI ---
         function updateRatingsUI(ratings) {
+            // Atualiza cards e tabela
             if (!ratings || ratings.length === 0) {
                 averageRatingEl.textContent = 'N/A';
                 totalRatingsEl.textContent = '0';
                 noRatingsMessage.classList.remove('hidden');
-                ratingsTableBody.innerHTML = ''; // Garante que a tabela esteja limpa
+                ratingsTableBody.innerHTML = '';
+            } else {
+                const total = ratings.reduce((acc, rating) => acc + rating.nota, 0);
+                const average = (total / ratings.length).toFixed(1);
+                
+                averageRatingEl.textContent = average;
+                totalRatingsEl.textContent = ratings.length;
+
+                ratingsTableBody.innerHTML = '';
+                noRatingsMessage.classList.add('hidden');
+
+                ratings.slice(0, 10).forEach(rating => { // Mostra apenas as 10 últimas na tabela
+                    const date = new Date(rating.created_at).toLocaleDateString('pt-BR', {
+                        day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                    });
+                    const row = `
+                        <tr class="bg-white border-b">
+                            <td class="px-6 py-4 font-medium text-gray-900">${'⭐'.repeat(rating.nota)}</td>
+                            <td class="px-6 py-4">${date}</td>
+                        </tr>
+                    `;
+                    ratingsTableBody.innerHTML += row;
+                });
+            }
+            // Inicializa o gráfico
+            setupChart(ratings);
+        }
+
+        // --- 4. LÓGICA DO GRÁFICO ---
+        function setupChart(allRatings) {
+            if (!allRatings || allRatings.length === 0) {
+                chartCanvas.parentElement.innerHTML = '<p class="text-center text-gray-500 py-8">Não há dados suficientes para exibir o gráfico.</p>';
                 return;
             }
 
-            const total = ratings.reduce((acc, rating) => acc + rating.nota, 0);
-            const average = (total / ratings.length).toFixed(1);
-            
-            averageRatingEl.textContent = average;
-            totalRatingsEl.textContent = ratings.length;
+            const updateChart = (period) => {
+                const days = period === 'week' ? 7 : 30;
+                const startDate = new Date();
+                startDate.setDate(startDate.getDate() - (days - 1));
+                startDate.setHours(0, 0, 0, 0);
 
-            ratingsTableBody.innerHTML = ''; // Limpa a tabela antes de adicionar novas linhas
-            noRatingsMessage.classList.add('hidden'); // Esconde a mensagem de "sem avaliações"
+                const filteredRatings = allRatings.filter(r => new Date(r.created_at) >= startDate);
 
-            ratings.forEach(rating => {
-                const date = new Date(rating.created_at).toLocaleDateString('pt-BR', {
-                    day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                const ratingsByDay = {};
+                for (let i = 0; i < days; i++) {
+                    const d = new Date(startDate);
+                    d.setDate(d.getDate() + i);
+                    const key = d.toISOString().split('T')[0];
+                    ratingsByDay[key] = [];
+                }
+
+                filteredRatings.forEach(r => {
+                    const key = new Date(r.created_at).toISOString().split('T')[0];
+                    if (ratingsByDay.hasOwnProperty(key)) {
+                        ratingsByDay[key].push(r.nota);
+                    }
                 });
-                const row = `
-                    <tr class="bg-white border-b">
-                        <td class="px-6 py-4 font-medium text-gray-900">${'⭐'.repeat(rating.nota)}</td>
-                        <td class="px-6 py-4">${date}</td>
-                    </tr>
-                `;
-                ratingsTableBody.innerHTML += row;
+
+                const labels = [];
+                const data = [];
+                Object.keys(ratingsByDay).forEach(dateKey => {
+                    const dayRatings = ratingsByDay[dateKey];
+                    const avg = dayRatings.length > 0 ? dayRatings.reduce((a, b) => a + b, 0) / dayRatings.length : 0;
+                    const [ , month, day] = dateKey.split('-');
+                    labels.push(`${day}/${month}`);
+                    data.push(avg.toFixed(1));
+                });
+
+                if (ratingsChart) {
+                    ratingsChart.destroy();
+                }
+
+                ratingsChart = new Chart(chartCanvas, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Média de Avaliações',
+                            data: data,
+                            backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                            borderColor: '#4f46e5',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true,
+                            pointBackgroundColor: '#4f46e5',
+                            pointRadius: 3,
+                            pointHoverRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: { beginAtZero: true, max: 5, ticks: { stepSize: 1 } },
+                            x: { grid: { display: false } }
+                        },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            };
+
+            weekBtn.addEventListener('click', () => {
+                updateChart('week');
+                weekBtn.classList.add('bg-indigo-600', 'text-white');
+                weekBtn.classList.remove('bg-gray-200', 'text-gray-700');
+                monthBtn.classList.add('bg-gray-200', 'text-gray-700');
+                monthBtn.classList.remove('bg-indigo-600', 'text-white');
             });
+
+            monthBtn.addEventListener('click', () => {
+                updateChart('month');
+                monthBtn.classList.add('bg-indigo-600', 'text-white');
+                monthBtn.classList.remove('bg-gray-200', 'text-gray-700');
+                weekBtn.classList.add('bg-gray-200', 'text-gray-700');
+                weekBtn.classList.remove('bg-indigo-600', 'text-white');
+            });
+            
+            updateChart('week'); // Renderização inicial
         }
 
-        // --- 4. EVENT LISTENERS ---
+
+        // --- 5. EVENT LISTENERS ---
         copyButton.addEventListener('click', () => {
             evaluationLinkEl.select();
             document.execCommand('copy');
@@ -239,8 +352,9 @@
             window.location.href = 'index.html';
         });
 
-        // --- 5. INICIALIZAÇÃO ---
+        // --- 6. INICIALIZAÇÃO ---
         loadDashboard();
     </script>
 </body>
 </html>
+
