@@ -92,7 +92,7 @@
                     </form>
                 </div>
 
-                <div id="message-area" class="mt-4 text-sm text-center transition-opacity duration-300 h-5"></div>
+                <div id="message-area" class="mt-4 text-sm text-center transition-opacity duration-300"></div>
                 <div class="mt-6 text-center">
                     <a href="#" id="toggle-form" class="inline-block w-full py-3 px-4 font-medium text-center text-prisme-primary rounded-lg hover:bg-green-50">Não tem uma conta? <strong>Crie gratuitamente</strong></a>
                 </div>
@@ -113,9 +113,40 @@
         const formTitle = document.getElementById('form-title');
         const messageArea = document.getElementById('message-area');
 
-        function showMessage(message, isError = false) {
+        /**
+         * Exibe uma mensagem na área de feedback.
+         * @param {string} message - O texto a ser exibido.
+         * @param {object} options - Opções de customização.
+         * @param {boolean} [options.isError=false] - Se a mensagem é de erro.
+         * @param {boolean} [options.isLarge=false] - Se a mensagem deve ser grande e destacada.
+         */
+        function showMessage(message, options = {}) {
+            const { isError = false, isLarge = false } = options;
+            
             messageArea.textContent = message;
-            messageArea.className = `mt-4 text-sm text-center h-5 transition-opacity duration-300 ${isError ? 'text-red-600' : 'text-green-600'}`;
+
+            // Classes base
+            let classes = ['mt-4', 'text-sm', 'text-center', 'transition-opacity', 'duration-300'];
+            
+            if (isLarge) {
+                // Estilos para a mensagem de destaque
+                classes.push('text-lg', 'font-semibold', 'p-3', 'rounded-md');
+                classes = classes.filter(c => c !== 'h-5' && c !== 'text-sm');
+            } else {
+                // Mantém a altura fixa para mensagens normais
+                classes.push('h-5');
+            }
+
+            // Define a cor com base no tipo de mensagem
+            if (isError) {
+                classes.push('text-red-600');
+                if (isLarge) classes.push('bg-red-100');
+            } else {
+                classes.push('text-green-600');
+                if (isLarge) classes.push('bg-green-100');
+            }
+
+            messageArea.className = classes.join(' ');
         }
 
         function applyInputMasks() {
@@ -132,21 +163,22 @@
         
         function validateRegisterForm() {
             for (const input of registerForm.querySelectorAll('input[required]')) {
-                 const label = input.closest('label')?.textContent.trim().replace(/\(.*\)/, '').trim() || 'Campo';
-                if (!input.value.trim()) {
-                    showMessage(`O campo "${label}" é obrigatório.`, true);
-                    input.focus();
-                    return false;
-                }
+                 const labelElement = input.previousElementSibling;
+                 const label = labelElement ? labelElement.textContent.trim() : 'Campo';
+                 if (!input.value.trim()) {
+                     showMessage(`O campo "${label}" é obrigatório.`, { isError: true });
+                     input.focus();
+                     return false;
+                 }
             }
             const password = document.getElementById('register-password');
             const confirmPassword = document.getElementById('confirm-password');
             if (password.value.length < 6) {
-                showMessage('A senha deve ter no mínimo 6 caracteres.', true);
+                showMessage('A senha deve ter no mínimo 6 caracteres.', { isError: true });
                 return false;
             }
             if (password.value !== confirmPassword.value) {
-                showMessage('As senhas não coincidem.', true);
+                showMessage('As senhas não coincidem.', { isError: true });
                 return false;
             }
             return true;
@@ -171,18 +203,18 @@
 
         async function handleLogin(e) {
             e.preventDefault();
-            showMessage('Entrando...', false);
+            showMessage('Entrando...');
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
             const { error } = await supabase.auth.signInWithPassword({ email, password });
-            if (error) return showMessage('Email ou senha inválidos.', true);
+            if (error) return showMessage('Email ou senha inválidos.', { isError: true });
             window.location.href = 'dashboard.html';
         }
 
         async function handleRegister(e) {
             e.preventDefault();
             if (!validateRegisterForm()) return; 
-            showMessage('Criando sua conta...', false);
+            showMessage('Criando sua conta...');
 
             const companyName = document.getElementById('register-company-name').value;
             const companyData = {
@@ -191,7 +223,6 @@
                 nome_empresa: companyName,
                 seguimento: document.getElementById('register-segment').value,
                 cnpj: document.getElementById('register-cnpj').value.replace(/\D/g, ''),
-                // CORREÇÃO: Usando a chave correta para o CPF
                 cpf_responsavel: document.getElementById('register-cpf').value.replace(/\D/g, ''),
                 slug_url: `${companyName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}-${Math.random().toString(36).substring(2, 6)}`
             };
@@ -209,12 +240,18 @@
             });
 
             if (error) {
-                if(error.message.includes("User already registered")) return showMessage("Este email já está cadastrado.", true);
-                return showMessage(error.message, true);
+                if(error.message.includes("User already registered")) return showMessage("Este email já está cadastrado.", { isError: true });
+                return showMessage(error.message, { isError: true });
             }
             
-            showMessage('Cadastro realizado! Verifique seu email para confirmar a conta.');
-            setTimeout(() => toggleLink.click(), 5000);
+            showMessage('Cadastro realizado! Verifique seu email para confirmar a conta.', { isLarge: true });
+            
+            setTimeout(() => {
+                // Apenas volta para a tela de login se o formulário de registro ainda estiver visível
+                if (!registerForm.classList.contains('hidden')) {
+                    toggleLink.click();
+                }
+            }, 5000);
         }
 
         applyInputMasks();
@@ -222,4 +259,3 @@
     </script>
 </body>
 </html>
-
