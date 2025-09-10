@@ -198,15 +198,19 @@
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
 
+            // Envia os dados da empresa como metadados, que serão lidos pelo dashboard no primeiro login
             const { error } = await supabase.auth.signUp({
                 email,
                 password,
-                options: { data: companyData }
+                options: { 
+                    data: companyData,
+                    // Redireciona o usuário para o dashboard após ele clicar no link de confirmação do e-mail
+                    emailRedirectTo: `${window.location.origin}/dashboard.html`
+                }
             });
 
             if (error) {
                 if(error.message.includes("User already registered")) return showMessage("Este email já está cadastrado.", true);
-                if(error.message.includes("Database error saving new user")) return showMessage("Erro interno ao criar empresa. Tente novamente.", true);
                 return showMessage(error.message, true);
             }
             
