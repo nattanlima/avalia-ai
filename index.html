@@ -11,40 +11,10 @@
         body {
             font-family: 'Inter', sans-serif;
         }
-
-        /* Cor primária Prisme (Verde) */
         .bg-prisme-primary { background-color: #10B981; }
         .hover\:bg-prisme-primary-dark:hover { background-color: #059669; }
         .text-prisme-primary { color: #10B981; }
-        .hover\:text-prisme-primary-dark:hover { color: #059669; }
-        .border-prisme-primary { border-color: #10B981; }
-        .focus\:ring-prisme-primary:focus {
-            --tw-ring-color: #10B981;
-        }
-
-        /* Estilos para transições de formulário */
-        .form-container {
-            position: relative;
-            min-height: 420px; /* Altura mínima para evitar "pulos" */
-            overflow: hidden;
-        }
-
-        .form-step {
-            position: absolute;
-            width: 100%;
-            transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
-            opacity: 1;
-        }
-
-        .form-step.hidden-left {
-            transform: translateX(-100%);
-            opacity: 0;
-        }
-
-        .form-step.hidden-right {
-            transform: translateX(100%);
-            opacity: 0;
-        }
+        .focus\:ring-prisme-primary:focus { --tw-ring-color: #10B981; }
     </style>
 </head>
 
@@ -63,97 +33,68 @@
                     <img class="mx-auto h-28 w-auto" src="https://raw.githubusercontent.com/nattanlima/avalia-ai/main/icons/logo.png" alt="Prisme Logo">
                     <h1 class="text-4xl font-bold text-gray-800 mt-4">Avalia Ai!</h1>
                     <p class="text-gray-500">Sua opinião transforma negócios.</p>
-                    <h2 id="form-title" class="mt-8 text-2xl font-bold text-gray-700 transition-opacity duration-300">
-                        Acesse sua conta
-                    </h2>
+                    <h2 id="form-title" class="mt-8 text-2xl font-bold text-gray-700">Acesse sua conta</h2>
                 </div>
 
-                <div class="form-container">
-                    <form id="login-form" class="space-y-6 form-step" action="#" method="POST">
+                <div>
+                    <form id="login-form" class="space-y-6" method="POST">
                         <div>
                             <label for="login-email" class="block text-sm font-medium text-gray-700">Email</label>
-                            <div class="mt-1">
-                                <input id="login-email" name="email" type="email" autocomplete="email" required class="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
-                            </div>
+                            <input id="login-email" type="email" autocomplete="email" required class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary">
                         </div>
                         <div>
                             <label for="login-password" class="block text-sm font-medium text-gray-700">Senha</label>
-                            <div class="mt-1">
-                                <input id="login-password" name="password" type="password" autocomplete="current-password" required class="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
-                            </div>
+                            <input id="login-password" type="password" autocomplete="current-password" required class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary">
                         </div>
-                        <div>
-                            <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-prisme-primary hover:bg-prisme-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-prisme-primary transition-transform transform hover:scale-105">
-                                Entrar
-                            </button>
-                        </div>
+                        <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-prisme-primary hover:bg-prisme-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-prisme-primary">Entrar</button>
                     </form>
 
-                    <form id="register-form" class="space-y-6 form-step hidden-right" action="#" method="POST">
-                        <div id="step-1" class="space-y-6 form-step">
+                    <form id="register-form" class="space-y-6 hidden" method="POST">
+                         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                             <div>
                                 <label for="register-name" class="block text-sm font-medium text-gray-700">Seu nome</label>
-                                <input id="register-name" type="text" required class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
+                                <input id="register-name" type="text" required class="mt-1 w-full px-3 py-2 border rounded-lg">
                             </div>
                             <div>
                                 <label for="register-whatsapp" class="block text-sm font-medium text-gray-700">Seu WhatsApp</label>
-                                <input id="register-whatsapp" type="tel" required placeholder="(99) 99999-9999" class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
+                                <input id="register-whatsapp" type="tel" required placeholder="(99) 99999-9999" class="mt-1 w-full px-3 py-2 border rounded-lg">
                             </div>
-                            <button type="button" id="next-step-1" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-prisme-primary hover:bg-prisme-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-prisme-primary transition-transform transform hover:scale-105">
-                                Continuar
-                            </button>
-                        </div>
-
-                        <div id="step-2" class="space-y-6 form-step hidden-right">
-                            <div>
+                            <div class="md:col-span-2">
                                 <label for="register-company-name" class="block text-sm font-medium text-gray-700">Nome da Empresa</label>
-                                <input id="register-company-name" type="text" required class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
+                                <input id="register-company-name" type="text" required class="mt-1 w-full px-3 py-2 border rounded-lg">
                             </div>
-                             <div>
+                            <div>
                                 <label for="register-segment" class="block text-sm font-medium text-gray-700">Seguimento</label>
-                                <input id="register-segment" type="text" required class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
+                                <input id="register-segment" type="text" required class="mt-1 w-full px-3 py-2 border rounded-lg">
                             </div>
                             <div>
                                 <label for="register-cnpj" class="block text-sm font-medium text-gray-700">CNPJ</label>
-                                <input id="register-cnpj" type="text" required placeholder="00.000.000/0000-00" class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
+                                <input id="register-cnpj" type="text" required placeholder="00.000.000/0000-00" class="mt-1 w-full px-3 py-2 border rounded-lg">
                             </div>
-                            <div>
+                            <div class="md:col-span-2">
                                 <label for="register-cpf" class="block text-sm font-medium text-gray-700">Seu CPF</label>
-                                <input id="register-cpf" type="text" required placeholder="000.000.000-00" class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
+                                <input id="register-cpf" type="text" required placeholder="000.000.000-00" class="mt-1 w-full px-3 py-2 border rounded-lg">
                             </div>
-                            <div class="flex gap-4">
-                                <button type="button" id="back-step-2" class="w-1/2 flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">Voltar</button>
-                                <button type="button" id="next-step-2" class="w-1/2 flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-prisme-primary hover:bg-prisme-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-prisme-primary">Continuar</button>
-                            </div>
-                        </div>
-
-                        <div id="step-3" class="space-y-6 form-step hidden-right">
-                            <div>
+                            <div class="md:col-span-2">
                                 <label for="register-email" class="block text-sm font-medium text-gray-700">Email</label>
-                                <input id="register-email" type="email" required class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
+                                <input id="register-email" type="email" required class="mt-1 w-full px-3 py-2 border rounded-lg">
                             </div>
-                            <div>
-                                <label for="register-password" class="block text-sm font-medium text-gray-700">Crie uma senha (mínimo 6 caracteres)</label>
-                                <input id="register-password" type="password" required minlength="6" class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
+                             <div>
+                                <label for="register-password" class="block text-sm font-medium text-gray-700">Crie uma senha</label>
+                                <input id="register-password" type="password" required minlength="6" class="mt-1 w-full px-3 py-2 border rounded-lg">
                             </div>
                             <div>
                                 <label for="confirm-password" class="block text-sm font-medium text-gray-700">Confirme sua senha</label>
-                                <input id="confirm-password" type="password" required minlength="6" class="mt-1 appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-prisme-primary focus:border-prisme-primary sm:text-sm">
-                            </div>
-                            <div class="flex gap-4">
-                                <button type="button" id="back-step-3" class="w-1/2 flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">Voltar</button>
-                                <button type="submit" class="w-1/2 flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-prisme-primary hover:bg-prisme-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-prisme-primary">Criar conta</button>
+                                <input id="confirm-password" type="password" required minlength="6" class="mt-1 w-full px-3 py-2 border rounded-lg">
                             </div>
                         </div>
+                        <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-prisme-primary hover:bg-prisme-primary-dark">Criar conta</button>
                     </form>
                 </div>
 
                 <div id="message-area" class="mt-4 text-sm text-center transition-opacity duration-300 h-5"></div>
-
                 <div class="mt-6 text-center">
-                    <a href="#" id="toggle-form" class="inline-block w-full py-3 px-4 font-medium text-center text-prisme-primary rounded-lg hover:bg-green-50 transition duration-150 ease-in-out">
-                        Não tem uma conta? <strong>Crie gratuitamente</strong>
-                    </a>
+                    <a href="#" id="toggle-form" class="inline-block w-full py-3 px-4 font-medium text-center text-prisme-primary rounded-lg hover:bg-green-50">Não tem uma conta? <strong>Crie gratuitamente</strong></a>
                 </div>
             </div>
         </div>
@@ -162,25 +103,16 @@
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-        // --- Configuração do Supabase ---
         const SUPABASE_URL = 'https://uufwwbsuljjhaqhpyilg.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1Znd3YnN1bGpqaGFxaHB5aWxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0Mzg0NDEsImV4cCI6MjA3MzAxNDQ0MX0.NqvvWYFIIXjVU7y4OvkLxE-ozg0PX2MFCJqo6gD0KQQ';
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // --- Elementos do DOM ---
         const loginForm = document.getElementById('login-form');
         const registerForm = document.getElementById('register-form');
         const toggleLink = document.getElementById('toggle-form');
         const formTitle = document.getElementById('form-title');
         const messageArea = document.getElementById('message-area');
-        const steps = [document.getElementById('step-1'), document.getElementById('step-2'), document.getElementById('step-3')];
-        const nextButtons = [document.getElementById('next-step-1'), document.getElementById('next-step-2')];
-        const backButtons = [document.getElementById('back-step-2'), document.getElementById('back-step-3')];
 
-        // --- Estado do Formulário ---
-        let currentStep = 0;
-
-        // --- Funções Auxiliares ---
         function showMessage(message, isError = false) {
             messageArea.textContent = message;
             messageArea.className = `mt-4 text-sm text-center h-5 transition-opacity duration-300 ${isError ? 'text-red-600' : 'text-green-600'}`;
@@ -194,86 +126,43 @@
             };
             Object.keys(masks).forEach(id => {
                 const input = document.getElementById(id);
-                if (input) {
-                    input.addEventListener('input', (e) => {
-                        e.target.value = masks[id](e.target.value);
-                    });
-                }
+                if (input) input.addEventListener('input', (e) => e.target.value = masks[id](e.target.value));
             });
         }
         
-        // --- Lógica do Formulário Multi-Step ---
-        function showStep(stepIndex) {
-            steps.forEach((step, index) => {
-                step.classList.toggle('hidden-left', index < stepIndex);
-                step.classList.toggle('hidden-right', index > stepIndex);
-            });
-            currentStep = stepIndex;
-        }
-
-        function validateStep(stepIndex) {
-            const inputs = steps[stepIndex].querySelectorAll('input[required]');
-            for (const input of inputs) {
+        function validateRegisterForm() {
+            for (const input of registerForm.querySelectorAll('input[required]')) {
+                 const label = input.closest('label')?.textContent.trim().replace(/\(.*\)/, '').trim() || 'Campo';
                 if (!input.value.trim()) {
-                    showMessage(`O campo "${input.labels[0].textContent}" é obrigatório.`, true);
+                    showMessage(`O campo "${label}" é obrigatório.`, true);
                     input.focus();
                     return false;
                 }
             }
-
-            if (stepIndex === 2) {
-                const password = document.getElementById('register-password');
-                const confirmPassword = document.getElementById('confirm-password');
-
-                if (password.value.length < 6) {
-                    showMessage('A senha deve ter no mínimo 6 caracteres.', true);
-                    password.focus();
-                    return false;
-                }
-                if (password.value !== confirmPassword.value) {
-                    showMessage('As senhas não coincidem.', true);
-                    confirmPassword.focus();
-                    return false;
-                }
+            const password = document.getElementById('register-password');
+            const confirmPassword = document.getElementById('confirm-password');
+            if (password.value.length < 6) {
+                showMessage('A senha deve ter no mínimo 6 caracteres.', true);
+                return false;
+            }
+            if (password.value !== confirmPassword.value) {
+                showMessage('As senhas não coincidem.', true);
+                return false;
             }
             return true;
         }
 
-        // --- Lógica de Navegação e Submissão ---
         function setupEventListeners() {
             toggleLink.addEventListener('click', (e) => {
                 e.preventDefault();
                 showMessage('');
-                const isLoginVisible = !loginForm.classList.contains('hidden-left');
-
-                if (isLoginVisible) {
-                    loginForm.classList.add('hidden-left');
-                    registerForm.classList.remove('hidden-right');
-                    showStep(0);
-                    formTitle.textContent = 'Crie sua conta';
-                    toggleLink.innerHTML = 'Já tem uma conta? <strong>Acesse aqui</strong>';
-                } else {
-                    loginForm.classList.remove('hidden-left');
-                    registerForm.classList.add('hidden-right');
-                    formTitle.textContent = 'Acesse sua conta';
-                    toggleLink.innerHTML = 'Não tem uma conta? <strong>Crie gratuitamente</strong>';
-                }
-            });
-
-            nextButtons.forEach((button, index) => {
-                button.addEventListener('click', () => {
-                    if (validateStep(index)) {
-                        showMessage('');
-                        showStep(index + 1);
-                    }
-                });
-            });
-
-            backButtons.forEach((button, index) => {
-                button.addEventListener('click', () => {
-                    showMessage('');
-                    showStep(index);
-                });
+                const isLoginVisible = !loginForm.classList.contains('hidden');
+                
+                loginForm.classList.toggle('hidden', isLoginVisible);
+                registerForm.classList.toggle('hidden', !isLoginVisible);
+                
+                formTitle.textContent = isLoginVisible ? 'Crie sua conta' : 'Acesse sua conta';
+                toggleLink.innerHTML = isLoginVisible ? 'Já tem uma conta? <strong>Acesse aqui</strong>' : 'Não tem uma conta? <strong>Crie gratuitamente</strong>';
             });
             
             loginForm.addEventListener('submit', handleLogin);
@@ -282,64 +171,52 @@
 
         async function handleLogin(e) {
             e.preventDefault();
+            showMessage('Entrando...', false);
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
-            
             const { error } = await supabase.auth.signInWithPassword({ email, password });
-
-            if (error) {
-                return showMessage('Email ou senha inválidos.', true);
-            }
-            
+            if (error) return showMessage('Email ou senha inválidos.', true);
             window.location.href = 'dashboard.html';
         }
 
         async function handleRegister(e) {
             e.preventDefault();
-            if (!validateStep(2)) return;
+            if (!validateRegisterForm()) return; 
+            showMessage('Criando sua conta...', false);
 
-            const name = document.getElementById('register-name').value;
-            const whatsapp = document.getElementById('register-whatsapp').value.replace(/\D/g, '');
             const companyName = document.getElementById('register-company-name').value;
-            const segment = document.getElementById('register-segment').value;
-            const cnpj = document.getElementById('register-cnpj').value.replace(/\D/g, '');
-            const cpf = document.getElementById('register-cpf').value.replace(/\D/g, '');
+            const companyData = {
+                nome_responsavel: document.getElementById('register-name').value,
+                whatsapp_responsavel: document.getElementById('register-whatsapp').value.replace(/\D/g, ''),
+                nome_empresa: companyName,
+                seguimento: document.getElementById('register-segment').value,
+                cnpj: document.getElementById('register-cnpj').value.replace(/\D/g, ''),
+                cpf: document.getElementById('register-cpf').value.replace(/\D/g, ''),
+                slug_url: `${companyName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}-${Math.random().toString(36).substring(2, 6)}`
+            };
+            
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
 
-            const companyData = {
-                nome_responsavel: name,
-                whatsapp_responsavel: whatsapp,
-                nome_empresa: companyName,
-                seguimento: segment,
-                cnpj: cnpj,
-                cpf: cpf
-            };
-            
-            // A mágica acontece aqui: os dados da empresa são enviados como metadados do usuário.
             const { error } = await supabase.auth.signUp({
                 email,
                 password,
-                options: {
-                    data: companyData
-                }
+                options: { data: companyData }
             });
 
             if (error) {
-                return showMessage(`Erro: ${error.message}`, true);
+                if(error.message.includes("User already registered")) return showMessage("Este email já está cadastrado.", true);
+                if(error.message.includes("Database error saving new user")) return showMessage("Erro interno ao criar empresa. Tente novamente.", true);
+                return showMessage(error.message, true);
             }
-
-            showMessage('Cadastro realizado! Verifique seu email para confirmar a conta.');
             
-            setTimeout(() => {
-                toggleLink.click(); // Volta para a tela de login
-            }, 5000);
+            showMessage('Cadastro realizado! Verifique seu email para confirmar a conta.');
+            setTimeout(() => toggleLink.click(), 5000);
         }
 
-        // --- Inicialização ---
         applyInputMasks();
         setupEventListeners();
     </script>
-    
-    </body>
+</body>
 </html>
+
