@@ -104,7 +104,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="bg-white p-6 rounded-lg shadow-md mb-8">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4">Últimas Avaliações Recebidas</h3>
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm text-left text-gray-500">
@@ -118,6 +118,30 @@
                             </tbody>
                         </table>
                         <p id="no-ratings-message" class="text-center text-gray-500 py-8 hidden">Nenhuma avaliação recebida ainda.</p>
+                    </div>
+                </div>
+                
+                <!-- NOVO: Seção de Leads -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Leads Capturados (WhatsApp)</h3>
+                        <button id="download-csv-btn" class="bg-blue-500 text-white px-3 py-1.5 rounded-md text-sm font-medium hover:bg-blue-600 focus:outline-none transition-colors disabled:opacity-50" disabled>
+                            Baixar CSV
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">WhatsApp do Cliente</th>
+                                    <th scope="col" class="px-6 py-3">Nota Associada</th>
+                                    <th scope="col" class="px-6 py-3">Data da Captura</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leads-table-body">
+                            </tbody>
+                        </table>
+                        <p id="no-leads-message" class="text-center text-gray-500 py-8 hidden">Nenhum lead capturado ainda.</p>
                     </div>
                 </div>
             </div>
@@ -192,6 +216,7 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1Znd3YnN1bGpqaGFxaHB5aWxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0Mzg0NDEsImV4cCI6MjA3MzAxNDQ0MX0.NqvvWYFIIXjVU7y4OvkLxE-ozg0PX2MFCJqo6gD0KQQ';
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        // Elementos UI
         const loaderContainer = document.getElementById('loader-container');
         const dashboardContent = document.getElementById('dashboard-content');
         const companyNameEl = document.getElementById('company-name');
@@ -212,6 +237,12 @@
         const openTermsModalBtn = document.getElementById('open-terms-modal');
         const closeTermsModalXBtn = document.getElementById('close-terms-modal-x');
         const closeModalButton = document.getElementById('close-modal-button');
+
+        // NOVO: Elementos de Leads
+        const leadsTableBody = document.getElementById('leads-table-body');
+        const noLeadsMessage = document.getElementById('no-leads-message');
+        const downloadCsvBtn = document.getElementById('download-csv-btn');
+        let leadsData = []; // Armazenar dados dos leads para CSV
 
         async function loadDashboard() {
             try {
@@ -272,6 +303,19 @@
                 if (ratingsError) throw new Error('Erro ao buscar avaliações: ' + ratingsError.message);
                 
                 updateRatingsUI(ratings);
+                
+                // NOVO: Buscar Leads
+                const { data: leads, error: leadsError } = await supabase
+                    .from('leads_whatsapp')
+                    .select('whatsapp_cliente, created_at, avaliacoes(nota)')
+                    .eq('empresa_id', company.id)
+                    .order('created_at', { ascending: false });
+
+                if (leadsError) throw new Error('Erro ao buscar leads: ' + leadsError.message);
+
+                leadsData = leads; // Salva para o CSV
+                updateLeadsUI(leads);
+
 
             } catch (error) {
                 console.error("Erro Crítico no Dashboard:", error);
@@ -310,6 +354,32 @@
                 });
             }
             setupChart(ratings);
+        }
+
+        // NOVO: Função para atualizar a tabela de leads
+        function updateLeadsUI(leads) {
+            if (!leads || leads.length === 0) {
+                noLeadsMessage.classList.remove('hidden');
+                downloadCsvBtn.disabled = true;
+            } else {
+                leadsTableBody.innerHTML = '';
+                noLeadsMessage.classList.add('hidden');
+                downloadCsvBtn.disabled = false;
+                leads.forEach(lead => {
+                    const date = new Date(lead.created_at).toLocaleDateString('pt-BR', {
+                        day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                    });
+                    const nota = lead.avaliacoes ? `${'⭐'.repeat(lead.avaliacoes.nota)}` : 'N/A';
+                    const row = `
+                        <tr class="bg-white border-b">
+                            <td class="px-6 py-4 font-medium text-gray-900">${lead.whatsapp_cliente}</td>
+                            <td class="px-6 py-4">${nota}</td>
+                            <td class="px-6 py-4">${date}</td>
+                        </tr>
+                    `;
+                    leadsTableBody.innerHTML += row;
+                });
+            }
         }
 
         function setupChart(allRatings) {
@@ -403,6 +473,21 @@
             updateChart('week');
         }
 
+        // NOVO: Função para exportar CSV
+        function exportToCsv(filename, rows) {
+            const processRow = (row) => row.map(val => `"${(val === null || val === undefined) ? '' : String(val).replace(/"/g, '""')}"`).join(',');
+            const csvContent = rows.map(processRow).join('\n');
+            const blob = new Blob([`\uFEFF${csvContent}`], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
         copyButton.addEventListener('click', () => {
             evaluationLinkEl.select();
             document.execCommand('copy');
@@ -426,6 +511,23 @@
         termsModal.addEventListener('click', (e) => {
             if (e.target === termsModal) {
                 closeModal();
+            }
+        });
+
+        // NOVO: Event listener para o botão de download
+        downloadCsvBtn.addEventListener('click', () => {
+            if (leadsData && leadsData.length > 0) {
+                const csvData = [
+                    ["WhatsApp Cliente", "Nota Avaliacao", "Data Captura"]
+                ];
+                leadsData.forEach(lead => {
+                    const date = new Date(lead.created_at).toLocaleString('pt-BR');
+                    const nota = lead.avaliacoes ? lead.avaliacoes.nota : 'N/A';
+                    csvData.push([`'${lead.whatsapp_cliente}`, nota, date]);
+                });
+                exportToCsv('leads_avalia_ai.csv', csvData);
+            } else {
+                alert('Não há leads para baixar.');
             }
         });
 
