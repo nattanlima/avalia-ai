@@ -164,7 +164,6 @@
                             nome_empresa: companyMetadata.nome_empresa,
                             seguimento: companyMetadata.seguimento,
                             cnpj: companyMetadata.cnpj,
-                            // CORREÇÃO: Usando a coluna e a chave correta para o CPF
                             cpf_responsavel: companyMetadata.cpf_responsavel,
                             slug_url: companyMetadata.slug_url
                         })
@@ -195,7 +194,7 @@
                 
                 updateRatingsUI(ratings);
 
-            } catch (error)
+            } catch (error) { // CORREÇÃO: Adicionando chaves de abertura e fechamento
                 console.error("Erro Crítico no Dashboard:", error);
                 document.body.innerHTML = `<div class="text-center p-8"><h1 class="text-2xl font-bold text-red-600">Ocorreu um Erro</h1><p class="text-gray-600 mt-2">${error.message}</p><p class="mt-4"><a href="index.html" class="text-green-600 underline">Voltar para o login</a></p></div>`;
             } finally {
