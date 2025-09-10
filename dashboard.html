@@ -143,14 +143,12 @@
                 }
                 const user = session.user;
 
-                // 1. VERIFICA SE A EMPRESA JÁ EXISTE
                 let { data: company, error: fetchError } = await supabase
                     .from('empresas')
                     .select('*')
                     .eq('user_id', user.id)
                     .single();
 
-                // 2. SE A EMPRESA NÃO EXISTE (PRIMEIRO LOGIN), CRIA A PARTIR DOS METADADOS
                 if (fetchError && fetchError.code === 'PGRST116') { // PGRST116 = not found
                     const companyMetadata = user.user_metadata;
                     if (!companyMetadata || !companyMetadata.nome_empresa) {
@@ -166,7 +164,8 @@
                             nome_empresa: companyMetadata.nome_empresa,
                             seguimento: companyMetadata.seguimento,
                             cnpj: companyMetadata.cnpj,
-                            cpf: companyMetadata.cpf,
+                            // CORREÇÃO: Usando a coluna e a chave correta para o CPF
+                            cpf_responsavel: companyMetadata.cpf_responsavel,
                             slug_url: companyMetadata.slug_url
                         })
                         .select()
@@ -180,14 +179,12 @@
                     throw new Error('Erro ao buscar dados da empresa: ' + fetchError.message);
                 }
 
-                // 3. ATUALIZA A UI COM OS DADOS DA EMPRESA
                 companyNameEl.textContent = company.nome_empresa;
                 const evaluationLink = `https://avaliaai.prismeapp.com.br/avaliar.html?slug=${company.slug_url}`;
                 evaluationLinkEl.value = evaluationLink;
 
                 new QRious({ element: qrCanvas, value: evaluationLink, size: 160, padding: 10 });
 
-                // 4. BUSCA E EXIBE AS AVALIAÇÕES
                 const { data: ratings, error: ratingsError } = await supabase
                     .from('avaliacoes')
                     .select('nota, created_at')
@@ -198,7 +195,7 @@
                 
                 updateRatingsUI(ratings);
 
-            } catch (error) {
+            } catch (error)
                 console.error("Erro Crítico no Dashboard:", error);
                 document.body.innerHTML = `<div class="text-center p-8"><h1 class="text-2xl font-bold text-red-600">Ocorreu um Erro</h1><p class="text-gray-600 mt-2">${error.message}</p><p class="mt-4"><a href="index.html" class="text-green-600 underline">Voltar para o login</a></p></div>`;
             } finally {
