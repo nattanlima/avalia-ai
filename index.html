@@ -191,20 +191,19 @@
                 nome_empresa: companyName,
                 seguimento: document.getElementById('register-segment').value,
                 cnpj: document.getElementById('register-cnpj').value.replace(/\D/g, ''),
-                cpf: document.getElementById('register-cpf').value.replace(/\D/g, ''),
+                // CORREÇÃO: Usando a chave correta para o CPF
+                cpf_responsavel: document.getElementById('register-cpf').value.replace(/\D/g, ''),
                 slug_url: `${companyName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}-${Math.random().toString(36).substring(2, 6)}`
             };
             
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
 
-            // Envia os dados da empresa como metadados, que serão lidos pelo dashboard no primeiro login
             const { error } = await supabase.auth.signUp({
                 email,
                 password,
                 options: { 
                     data: companyData,
-                    // Redireciona o usuário para o dashboard após ele clicar no link de confirmação do e-mail
                     emailRedirectTo: `${window.location.origin}/dashboard.html`
                 }
             });
