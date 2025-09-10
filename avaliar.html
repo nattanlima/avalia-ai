@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Avalie nosso Atendimento - Avalia Aí</title>
     <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/nattanlima/avalia-ai/refs/heads/main/icons/favicon-16x16.ico">
+    
+    <!-- PWA -->
+    <meta name="theme-color" content="#4f46e5">
+    <link rel="manifest" href="manifest.json">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,9 +48,9 @@
             border-color: #6366f1; /* indigo-500 */
         }
         .rating-btn.selected {
-             background-color: #818cf8; /* indigo-400 */
-             color: white;
-             border-color: #4f46e5; /* indigo-600 */
+              background-color: #818cf8; /* indigo-400 */
+              color: white;
+              border-color: #4f46e5; /* indigo-600 */
         }
     </style>
 </head>
@@ -69,26 +74,26 @@
                 <p class="text-gray-600 mt-4">Sua opinião é muito importante para nós. Por favor, toque em uma das opções abaixo.</p>
                 
                 <div id="rating-buttons" class="flex justify-center items-start gap-2 sm:gap-4 mt-8">
-                     <div class="text-center w-16 sm:w-20">
-                        <button class="rating-btn mx-auto" data-value="1">😠</button>
-                        <p class="text-xs sm:text-sm font-medium text-gray-700 mt-2">Péssimo</p>
-                    </div>
-                     <div class="text-center w-16 sm:w-20">
-                        <button class="rating-btn mx-auto" data-value="2">😟</button>
-                        <p class="text-xs sm:text-sm font-medium text-gray-700 mt-2">Ruim</p>
-                    </div>
-                     <div class="text-center w-16 sm:w-20">
-                        <button class="rating-btn mx-auto" data-value="3">😐</button>
-                        <p class="text-xs sm:text-sm font-medium text-gray-700 mt-2">Regular</p>
-                    </div>
-                     <div class="text-center w-16 sm:w-20">
-                        <button class="rating-btn mx-auto" data-value="4">🙂</button>
-                        <p class="text-xs sm:text-sm font-medium text-gray-700 mt-2">Bom</p>
-                    </div>
-                     <div class="text-center w-16 sm:w-20">
-                        <button class="rating-btn mx-auto" data-value="5">😄</button>
-                        <p class="text-xs sm:text-sm font-medium text-gray-700 mt-2">Ótimo</p>
-                    </div>
+                      <div class="text-center w-16 sm:w-20">
+                          <button class="rating-btn mx-auto" data-value="1">😠</button>
+                          <p class="text-xs sm:text-sm font-medium text-gray-700 mt-2">Péssimo</p>
+                      </div>
+                      <div class="text-center w-16 sm:w-20">
+                          <button class="rating-btn mx-auto" data-value="2">😟</button>
+                          <p class="text-xs sm:text-sm font-medium text-gray-700 mt-2">Ruim</p>
+                      </div>
+                      <div class="text-center w-16 sm:w-20">
+                          <button class="rating-btn mx-auto" data-value="3">😐</button>
+                          <p class="text-xs sm:text-sm font-medium text-gray-700 mt-2">Regular</p>
+                      </div>
+                      <div class="text-center w-16 sm:w-20">
+                          <button class="rating-btn mx-auto" data-value="4">🙂</button>
+                          <p class="text-xs sm:text-sm font-medium text-gray-700 mt-2">Bom</p>
+                      </div>
+                      <div class="text-center w-16 sm:w-20">
+                          <button class="rating-btn mx-auto" data-value="5">😄</button>
+                          <p class="text-xs sm:text-sm font-medium text-gray-700 mt-2">Ótimo</p>
+                      </div>
                 </div>
             </div>
 
@@ -112,6 +117,13 @@
         </div>
     </main>
     
+    <!-- BOTÃO DE INSTALAÇÃO DO APP -->
+    <div id="install-container" class="text-center mb-4 hidden">
+        <button id="install-button" class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors">
+            Baixar App
+        </button>
+    </div>
+
     <footer class="py-6 text-center text-sm text-gray-600">
         <p>
             <strong>Avalia Ai</strong>, um sistema Prisme Sales | 
@@ -138,6 +150,49 @@
 
         let empresaId = null;
         let ratingSubmitted = false;
+        
+        // --- CÓDIGO PWA ADICIONADO ---
+
+        const installContainer = document.getElementById('install-container');
+        const installButton = document.getElementById('install-button');
+        let deferredPrompt;
+
+        // 1. Registra o Service Worker
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js') // Caminho para o service worker na raiz do site
+              .then(registration => console.log('Service Worker registrado com sucesso:', registration))
+              .catch(err => console.log('Falha ao registrar Service Worker:', err));
+          });
+        }
+
+        // 2. Captura o evento de instalação
+        window.addEventListener('beforeinstallprompt', (e) => {
+          e.preventDefault();
+          deferredPrompt = e;
+          installContainer.classList.remove('hidden');
+          console.log('`beforeinstallprompt` foi disparado');
+        });
+
+        // 3. Adiciona o listener ao botão de instalação
+        installButton.addEventListener('click', async () => {
+          if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`User response to the install prompt: ${outcome}`);
+            deferredPrompt = null;
+            installContainer.classList.add('hidden');
+          }
+        });
+
+        // 4. Se o app já foi instalado, esconde o botão
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA foi instalado');
+            installContainer.classList.add('hidden');
+            deferredPrompt = null;
+        });
+
+        // --- FIM DO CÓDIGO PWA ---
 
         async function initializePage() {
             const params = new URLSearchParams(window.location.search);
