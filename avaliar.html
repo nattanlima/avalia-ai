@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Avalie nosso Atendimento - Avalia Aí</title>
-    <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/nattanlima/avalia-ai/refs/heads/main/icons/favicon-16x16.ico">
+    <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/nattanlima/avalia-ai/main/icons/favicon-16x16.ico">
     
     <!-- PWA -->
     <meta name="theme-color" content="#4f46e5">
@@ -23,17 +23,16 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 64px; /* Tamanho menor para telas pequenas */
+            width: 64px;
             height: 64px;
             border-radius: 12px;
-            border: 2px solid #e5e7eb; /* gray-200 */
+            border: 2px solid #e5e7eb;
             background-color: white;
             cursor: pointer;
             transition: all 0.2s ease-in-out;
-            font-size: 2.25rem; /* Tamanho do emoji */
+            font-size: 2.25rem;
         }
         
-        /* Aumenta o botão em telas maiores (sm: 640px para cima) */
         @media (min-width: 640px) {
             .rating-btn {
                 width: 80px;
@@ -45,12 +44,12 @@
         .rating-btn:hover {
             transform: translateY(-5px);
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            border-color: #6366f1; /* indigo-500 */
+            border-color: #6366f1;
         }
         .rating-btn.selected {
-              background-color: #818cf8; /* indigo-400 */
-              color: white;
-              border-color: #4f46e5; /* indigo-600 */
+             background-color: #818cf8;
+             color: white;
+             border-color: #4f46e5;
         }
     </style>
 </head>
@@ -97,22 +96,47 @@
                 </div>
             </div>
 
-            <!-- Mensagem de Sucesso (inicialmente oculta) -->
-            <div id="success-message" class="hidden">
-                <svg class="h-16 w-16 text-green-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <h2 class="text-2xl font-bold text-gray-800 mt-4">Obrigado por avaliar!</h2>
-                <p class="text-gray-600 mt-2">Sua avaliação foi registrada com sucesso.</p>
+            <!-- Seção de Sucesso e Captura de Lead (inicialmente oculta) -->
+            <div id="success-section" class="hidden space-y-4">
+                <div id="success-message">
+                    <svg class="h-16 w-16 text-green-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h2 class="text-2xl font-bold text-gray-800 mt-4">Obrigado por avaliar!</h2>
+                    <p class="text-gray-600 mt-2">Sua avaliação foi registrada com sucesso.</p>
+                </div>
+
+                <!-- Botão para iniciar captura de lead -->
+                <div id="lead-prompt" class="pt-4">
+                     <button id="show-lead-form-btn" class="w-full flex items-center justify-center gap-3 bg-green-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-600 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 14c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.7-.8.9-.1.1-.3.2-.5.1-.2-.1-.9-.3-1.8-1.1-.7-.6-1.1-1.4-1.3-1.6-.1-.2 0-.4.1-.5l.4-.5c.1-.1.2-.2.3-.4.1-.1.1-.2 0-.4-.1-.2-.6-1.5-.8-2.1-.2-.5-.4-.5-.6-.5h-.5c-.2 0-.5.2-.6.4-.2.2-.7.7-.7 1.6 0 .9.7 1.9.8 2 .1.1 1.4 2.2 3.4 3s1.4.3 1.9.3c.5 0 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2zM12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/></svg>
+                        RECEBA DESCONTOS EXCLUSIVOS
+                    </button>
+                </div>
+                
+                <!-- Formulário de captura de lead -->
+                <form id="lead-form" class="hidden pt-4 space-y-4">
+                    <div>
+                         <label for="whatsapp-input" class="sr-only">Seu WhatsApp</label>
+                         <input id="whatsapp-input" type="tel" placeholder="Seu WhatsApp (apenas números)" required class="w-full text-center appearance-none px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+                     <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition-colors">PARTICIPAR</button>
+                </form>
+
+                <!-- Mensagem final de sucesso do lead -->
+                <div id="lead-success-message" class="hidden pt-4">
+                     <h2 class="text-xl font-bold text-gray-800">Pronto!</h2>
+                     <p class="text-gray-600 mt-2">Você receberá nossas novidades em breve. Obrigado!</p>
+                </div>
             </div>
             
             <!-- Mensagem de Erro (inicialmente oculta) -->
             <div id="error-message" class="hidden">
                  <svg class="h-16 w-16 text-red-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <h2 class="text-2xl font-bold text-gray-800 mt-4">Página não encontrada</h2>
-                <p class="text-gray-600 mt-2">O link de avaliação parece ser inválido ou a empresa não foi encontrada.</p>
+                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                 </svg>
+                 <h2 class="text-2xl font-bold text-gray-800 mt-4">Página não encontrada</h2>
+                 <p class="text-gray-600 mt-2">O link de avaliação parece ser inválido ou a empresa não foi encontrada.</p>
             </div>
         </div>
     </main>
@@ -144,76 +168,64 @@
         const loader = document.getElementById('loader');
         const evaluationContent = document.getElementById('evaluation-content');
         const companyNameEl = document.getElementById('company-name');
-        const successMessage = document.getElementById('success-message');
+        const successSection = document.getElementById('success-section');
         const errorMessage = document.getElementById('error-message');
         const ratingButtons = document.querySelectorAll('.rating-btn');
+        // Novos elementos para captura de lead
+        const showLeadFormBtn = document.getElementById('show-lead-form-btn');
+        const leadForm = document.getElementById('lead-form');
+        const whatsappInput = document.getElementById('whatsapp-input');
+        const leadSuccessMessage = document.getElementById('lead-success-message');
+        const leadPrompt = document.getElementById('lead-prompt');
 
         let empresaId = null;
+        let avaliacaoId = null;
         let ratingSubmitted = false;
+        let refreshTimer = null; // Para controlar o refresh
         
-        // --- CÓDIGO PWA ADICIONADO ---
-
+        // --- CÓDIGO PWA ---
         const installContainer = document.getElementById('install-container');
         const installButton = document.getElementById('install-button');
         let deferredPrompt;
 
-        // 1. Registra o Service Worker
         if ('serviceWorker' in navigator) {
           window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js') // Caminho relativo para o service worker
+            navigator.serviceWorker.register('./sw.js')
               .then(registration => console.log('Service Worker registrado com sucesso:', registration))
               .catch(err => console.log('Falha ao registrar Service Worker:', err));
           });
         }
-
-        // 2. Captura o evento de instalação
         window.addEventListener('beforeinstallprompt', (e) => {
           e.preventDefault();
           deferredPrompt = e;
           installContainer.classList.remove('hidden');
-          console.log('`beforeinstallprompt` foi disparado');
         });
-
-        // 3. Adiciona o listener ao botão de instalação
         installButton.addEventListener('click', async () => {
           if (deferredPrompt) {
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
-            console.log(`User response to the install prompt: ${outcome}`);
             deferredPrompt = null;
             installContainer.classList.add('hidden');
           }
         });
-
-        // 4. Se o app já foi instalado, esconde o botão
         window.addEventListener('appinstalled', () => {
-            console.log('PWA foi instalado');
             installContainer.classList.add('hidden');
             deferredPrompt = null;
         });
 
-        // --- FIM DO CÓDIGO PWA ---
-
+        // --- LÓGICA DA PÁGINA ---
         async function initializePage() {
             const params = new URLSearchParams(window.location.search);
             const slug = params.get('slug');
             const lastUrl = localStorage.getItem('lastVisitedUrl');
 
-            // Se o app for iniciado pelo ícone (sem slug) e houver uma URL de cliente salva,
-            // redireciona para a última página de cliente visitada.
             if (!slug && lastUrl) {
                 window.location.replace(lastUrl);
-                return; // Para a execução para o redirecionamento ocorrer.
+                return;
             }
-
-            // Se o usuário estiver em uma página de cliente (com slug),
-            // salva esta URL para futuros inícios do app.
             if (slug) {
                 localStorage.setItem('lastVisitedUrl', window.location.href);
             }
-
-            // A lógica original continua: se, após as verificações, ainda não houver slug, mostra erro.
-            // Isso cobre o caso de um primeiro acesso sem um link de cliente específico.
             if (!slug) {
                 showError();
                 return;
@@ -243,27 +255,25 @@
 
         function showError() {
             loader.classList.add('hidden');
+            evaluationContent.classList.add('hidden');
             errorMessage.classList.remove('hidden');
         }
 
         function showSuccess() {
             evaluationContent.classList.add('hidden');
-            successMessage.classList.remove('hidden');
+            successSection.classList.remove('hidden');
             
-            // Recarrega a página após 4 segundos para o próximo cliente
-            setTimeout(() => {
+            // Inicia o timer para recarregar a página
+            refreshTimer = setTimeout(() => {
                 window.location.reload();
-            }, 4000);
+            }, 8000); // Aumenta o tempo para o usuário ter chance de se inscrever
         }
 
         async function submitRating(nota, selectedButton) {
             if (ratingSubmitted || !empresaId) return;
-            ratingSubmitted = true; // Impede envios múltiplos
+            ratingSubmitted = true;
 
-            // Destaca o botão selecionado
             selectedButton.classList.add('selected');
-            
-            // Desabilita outros botões
             ratingButtons.forEach(btn => {
                 if(btn !== selectedButton) {
                     btn.disabled = true;
@@ -271,27 +281,82 @@
                 }
             });
 
-            // Aguarda um pouco para o usuário ver a seleção antes de sumir
             setTimeout(async () => {
                 loader.classList.remove('hidden');
                 evaluationContent.classList.add('hidden');
 
-                const { error } = await supabase
+                const { data, error } = await supabase
                     .from('avaliacoes')
-                    .insert({ empresa_id: empresaId, nota: nota });
+                    .insert({ empresa_id: empresaId, nota: nota })
+                    .select('id') // Pede o ID da avaliação recém-criada
+                    .single();
 
                 loader.classList.add('hidden');
 
-                if (error) {
+                if (error || !data) {
                     console.error('Erro ao salvar avaliação:', error);
                     showError();
                 } else {
+                    avaliacaoId = data.id; // Salva o ID da avaliação
                     showSuccess();
                 }
-            }, 500); // 0.5 segundos de delay
+            }, 500);
         }
+
+        // --- NOVA LÓGICA PARA LEADS ---
+
+        // Apenas números no input de WhatsApp
+        whatsappInput.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/\D/g, '');
+        });
+
+        // Mostra o formulário de lead
+        showLeadFormBtn.addEventListener('click', () => {
+            clearTimeout(refreshTimer); // Para o refresh automático
+            leadPrompt.classList.add('hidden');
+            leadForm.classList.remove('hidden');
+            whatsappInput.focus();
+        });
+
+        // Envia o formulário de lead
+        leadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const whatsappNumber = whatsappInput.value;
+
+            if (whatsappNumber.length < 10) {
+                alert('Por favor, insira um número de WhatsApp válido.');
+                return;
+            }
+            
+            // Mostra um feedback de carregamento no botão
+            const submitBtn = leadForm.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Enviando...';
+
+            const { error } = await supabase
+                .from('leads_whatsapp')
+                .insert({
+                    empresa_id: empresaId,
+                    avaliacao_id: avaliacaoId,
+                    whatsapp_cliente: whatsappNumber,
+                    status_envio: 'pendente'
+                });
+            
+            if (error) {
+                console.error('Erro ao salvar lead:', error);
+                alert('Ocorreu um erro. Tente novamente.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'PARTICIPAR';
+            } else {
+                leadForm.classList.add('hidden');
+                leadSuccessMessage.classList.remove('hidden');
+                // Inicia um novo timer para o refresh final
+                setTimeout(() => window.location.reload(), 3000);
+            }
+        });
         
-        // Lógica de interação dos botões
+        // --- FIM DA LÓGICA PARA LEADS ---
+
         ratingButtons.forEach(button => {
             button.addEventListener('click', (e) => {
                 const selectedValue = e.currentTarget.dataset.value;
