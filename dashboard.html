@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel de Controle - Prisme Avalia Ai!</title>
-    <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/nattanlima/avalia-ai/refs/heads/main/icons/favicon-16x16.ico">
+    <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/nattanlima/avalia-ai/main/icons/favicon-16x16.ico">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
@@ -14,12 +14,12 @@
             font-family: 'Inter', sans-serif;
         }
         #loader {
-            border-top-color: #4f46e5;
+            border-top-color: #10B981; /* Verde Prisme */
             animation: spin 1s linear infinite;
         }
         @keyframes spin {
             to {
-                transform: rotate(360deg );
+                transform: rotate(360deg);
             }
         }
     </style>
@@ -39,24 +39,24 @@
                 <h1 class="text-2xl font-bold text-gray-900">
                     Painel de Controle
                 </h1>
-                <button id="logout-button" class="text-sm font-medium text-indigo-600 hover:text-indigo-800">Sair</button>
+                <button id="logout-button" class="text-sm font-medium text-green-600 hover:text-green-800">Sair</button>
             </div>
         </header>
         
         <main class="py-10">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="bg-white p-6 rounded-lg shadow-md mb-8">
-                    <h2 class="text-xl font-semibold text-gray-800">Olá, <span id="company-name" class="text-indigo-600">...</span>!</h2>
+                    <h2 class="text-xl font-semibold text-gray-800">Olá, <span id="company-name" class="text-green-600">...</span>!</h2>
                     <p class="text-gray-600 mt-2">Aqui estão os dados sobre as avaliações do seu negócio.</p>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
                     <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                        <p class="text-3xl font-bold text-indigo-600" id="average-rating">...</p>
+                        <p class="text-3xl font-bold text-green-600" id="average-rating">...</p>
                         <p class="text-sm font-medium text-gray-500 mt-1">Média Geral</p>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                        <p class="text-3xl font-bold text-indigo-600" id="total-ratings">...</p>
+                        <p class="text-3xl font-bold text-green-600" id="total-ratings">...</p>
                         <p class="text-sm font-medium text-gray-500 mt-1">Total de Avaliações</p>
                     </div>
                 </div>
@@ -72,7 +72,7 @@
                         <p class="text-gray-500 mb-4">Compartilhe este link com seus clientes.</p>
                         <div class="relative">
                             <input id="evaluation-link" type="text" class="w-full bg-gray-100 p-3 rounded-lg border focus:outline-none" readonly>
-                            <button id="copy-button" class="absolute right-2 top-1/2 -translate-y-1/2 bg-indigo-600 text-white px-3 py-1 rounded-md text-sm hover:bg-indigo-700">Copiar</button>
+                            <button id="copy-button" class="absolute right-2 top-1/2 -translate-y-1/2 bg-green-600 text-white px-3 py-1 rounded-md text-sm hover:bg-green-700">Copiar</button>
                         </div>
                     </div>
                 </div>
@@ -82,7 +82,7 @@
                     <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4 gap-4">
                         <h3 class="text-lg font-semibold text-gray-800">Média de Avaliações por Dia</h3>
                         <div class="flex-shrink-0">
-                            <button id="week-btn" class="bg-indigo-600 text-white px-3 py-1.5 rounded-md text-sm font-medium focus:outline-none transition-colors">Semana</button>
+                            <button id="week-btn" class="bg-green-600 text-white px-3 py-1.5 rounded-md text-sm font-medium focus:outline-none transition-colors">Semana</button>
                             <button id="month-btn" class="bg-gray-200 text-gray-700 px-3 py-1.5 rounded-md text-sm font-medium ml-2 focus:outline-none transition-colors">Mês</button>
                         </div>
                     </div>
@@ -102,7 +102,6 @@
                                 </tr>
                             </thead>
                             <tbody id="ratings-table-body">
-                                <!-- As linhas da tabela serão inseridas aqui -->
                             </tbody>
                         </table>
                         <p id="no-ratings-message" class="text-center text-gray-500 py-8 hidden">Nenhuma avaliação recebida ainda.</p>
@@ -115,11 +114,9 @@
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
         
-        // --- 1. CONFIGURAÇÃO E ELEMENTOS DO DOM ---
         const SUPABASE_URL = 'https://uufwwbsuljjhaqhpyilg.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1Znd3YnN1bGpqaGFxaHB5aWxnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0Mzg0NDEsImV4cCI6MjA3MzAxNDQ0MX0.NqvvWYFIIXjVU7y4OvkLxE-ozg0PX2MFCJqo6gD0KQQ';
-        
-        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY );
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const loaderContainer = document.getElementById('loader-container');
         const dashboardContent = document.getElementById('dashboard-content');
@@ -137,11 +134,8 @@
         const monthBtn = document.getElementById('month-btn');
         let ratingsChart = null;
 
-
-        // --- 2. FUNÇÃO PRINCIPAL PARA CARREGAR DADOS ---
         async function loadDashboard() {
             try {
-                // VERIFICA SESSÃO DO USUÁRIO
                 const { data: { session }, error: sessionError } = await supabase.auth.getSession();
                 if (sessionError || !session) {
                     window.location.href = 'index.html';
@@ -149,74 +143,75 @@
                 }
                 const user = session.user;
 
-                // BUSCA DADOS DA EMPRESA
-                const { data: company, error: companyError } = await supabase
+                // 1. VERIFICA SE A EMPRESA JÁ EXISTE
+                let { data: company, error: fetchError } = await supabase
                     .from('empresas')
                     .select('*')
                     .eq('user_id', user.id)
                     .single();
 
-                if (companyError || !company) {
-                    if (companyError) {
-                        throw new Error(`Não foi possível carregar os dados da sua empresa. Detalhe: ${companyError.message}`);
+                // 2. SE A EMPRESA NÃO EXISTE (PRIMEIRO LOGIN), CRIA A PARTIR DOS METADADOS
+                if (fetchError && fetchError.code === 'PGRST116') {
+                    const companyMetadata = user.user_metadata;
+                    if (!companyMetadata || !companyMetadata.nome_empresa) {
+                         throw new Error('Dados de cadastro não encontrados. Por favor, tente se cadastrar novamente.');
                     }
-                    throw new Error('Não foi possível carregar os dados da sua empresa. Verifique se o cadastro foi concluído.');
+                    
+                    const { data: newCompany, error: insertError } = await supabase
+                        .from('empresas')
+                        .insert({
+                            user_id: user.id,
+                            nome_responsavel: companyMetadata.nome_responsavel,
+                            whatsapp_responsavel: companyMetadata.whatsapp_responsavel,
+                            nome_empresa: companyMetadata.nome_empresa,
+                            seguimento: companyMetadata.seguimento,
+                            cnpj: companyMetadata.cnpj,
+                            cpf: companyMetadata.cpf,
+                            slug_url: companyMetadata.slug_url
+                        })
+                        .select()
+                        .single();
+
+                    if (insertError) {
+                        throw new Error('Falha ao finalizar seu cadastro: ' + insertError.message);
+                    }
+                    company = newCompany;
+                } else if (fetchError) {
+                    throw new Error('Erro ao buscar dados da empresa: ' + fetchError.message);
                 }
 
-                // ATUALIZA NOME DA EMPRESA E LINK DE AVALIAÇÃO
+                // 3. ATUALIZA A UI COM OS DADOS DA EMPRESA
                 companyNameEl.textContent = company.nome_empresa;
-                
-                const slug = company.slug_url;
-                if (!slug) {
-                    throw new Error('O slug da sua empresa não foi encontrado.');
-                }
-                const evaluationLink = `https://avaliaai.prismeapp.com.br/avaliar.html?slug=${slug}`;
+                const evaluationLink = `https://avaliaai.prismeapp.com.br/avaliar.html?slug=${company.slug_url}`;
                 evaluationLinkEl.value = evaluationLink;
 
-                // GERA QR CODE
-                new QRious({
-                    element: qrCanvas,
-                    value: evaluationLink,
-                    size: 160,
-                    padding: 10,
-                } );
+                new QRious({ element: qrCanvas, value: evaluationLink, size: 160, padding: 10 });
 
-                // BUSCA AVALIAÇÕES
+                // 4. BUSCA E EXIBE AS AVALIAÇÕES
                 const { data: ratings, error: ratingsError } = await supabase
                     .from('avaliacoes')
                     .select('nota, created_at')
                     .eq('empresa_id', company.id)
                     .order('created_at', { ascending: false });
 
-                if (ratingsError) {
-                    throw new Error('Não foi possível carregar as avaliações. ' + ratingsError.message);
-                }
+                if (ratingsError) throw new Error('Erro ao buscar avaliações: ' + ratingsError.message);
                 
-                // ATUALIZA ESTATÍSTICAS, TABELA E GRÁFICO
                 updateRatingsUI(ratings);
 
             } catch (error) {
                 console.error("Erro Crítico no Dashboard:", error);
-                document.body.innerHTML = `<div class="text-center p-8">
-                    <h1 class="text-2xl font-bold text-red-600">Ocorreu um Erro</h1>
-                    <p class="text-gray-600 mt-2">${error.message}</p>
-                    <p class="mt-4">Por favor, <a href="dashboard.html" class="text-indigo-600 underline">recarregue a página</a> ou tente fazer login novamente.</p>
-                </div>`;
+                document.body.innerHTML = `<div class="text-center p-8"><h1 class="text-2xl font-bold text-red-600">Ocorreu um Erro</h1><p class="text-gray-600 mt-2">${error.message}</p><p class="mt-4"><a href="dashboard.html" class="text-indigo-600 underline">Recarregue a página</a> ou tente fazer login novamente.</p></div>`;
             } finally {
-                // ESCONDE O LOADER E MOSTRA O CONTEÚDO
                 loaderContainer.classList.add('hidden');
                 dashboardContent.classList.remove('hidden');
             }
         }
         
-        // --- 3. FUNÇÕES PARA ATUALIZAR A UI ---
         function updateRatingsUI(ratings) {
-            // Atualiza cards e tabela
             if (!ratings || ratings.length === 0) {
                 averageRatingEl.textContent = 'N/A';
                 totalRatingsEl.textContent = '0';
                 noRatingsMessage.classList.remove('hidden');
-                ratingsTableBody.innerHTML = '';
             } else {
                 const total = ratings.reduce((acc, rating) => acc + rating.nota, 0);
                 const average = (total / ratings.length).toFixed(1);
@@ -226,8 +221,7 @@
 
                 ratingsTableBody.innerHTML = '';
                 noRatingsMessage.classList.add('hidden');
-
-                ratings.slice(0, 10).forEach(rating => { // Mostra apenas as 10 últimas na tabela
+                ratings.slice(0, 10).forEach(rating => {
                     const date = new Date(rating.created_at).toLocaleDateString('pt-BR', {
                         day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
                     });
@@ -240,11 +234,9 @@
                     ratingsTableBody.innerHTML += row;
                 });
             }
-            // Inicializa o gráfico
             setupChart(ratings);
         }
 
-        // --- 4. LÓGICA DO GRÁFICO ---
         function setupChart(allRatings) {
             if (!allRatings || allRatings.length === 0) {
                 chartCanvas.parentElement.innerHTML = '<p class="text-center text-gray-500 py-8">Não há dados suficientes para exibir o gráfico.</p>';
@@ -295,12 +287,12 @@
                         datasets: [{
                             label: 'Média de Avaliações',
                             data: data,
-                            backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                            borderColor: '#4f46e5',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderColor: '#10B981',
                             borderWidth: 2,
                             tension: 0.3,
                             fill: true,
-                            pointBackgroundColor: '#4f46e5',
+                            pointBackgroundColor: '#10B981',
                             pointRadius: 3,
                             pointHoverRadius: 5
                         }]
@@ -319,32 +311,28 @@
 
             weekBtn.addEventListener('click', () => {
                 updateChart('week');
-                weekBtn.classList.add('bg-indigo-600', 'text-white');
+                weekBtn.classList.add('bg-green-600', 'text-white');
                 weekBtn.classList.remove('bg-gray-200', 'text-gray-700');
                 monthBtn.classList.add('bg-gray-200', 'text-gray-700');
-                monthBtn.classList.remove('bg-indigo-600', 'text-white');
+                monthBtn.classList.remove('bg-green-600', 'text-white');
             });
 
             monthBtn.addEventListener('click', () => {
                 updateChart('month');
-                monthBtn.classList.add('bg-indigo-600', 'text-white');
+                monthBtn.classList.add('bg-green-600', 'text-white');
                 monthBtn.classList.remove('bg-gray-200', 'text-gray-700');
                 weekBtn.classList.add('bg-gray-200', 'text-gray-700');
-                weekBtn.classList.remove('bg-indigo-600', 'text-white');
+                weekBtn.classList.remove('bg-green-600', 'text-white');
             });
             
-            updateChart('week'); // Renderização inicial
+            updateChart('week');
         }
 
-
-        // --- 5. EVENT LISTENERS ---
         copyButton.addEventListener('click', () => {
             evaluationLinkEl.select();
             document.execCommand('copy');
             copyButton.textContent = 'Copiado!';
-            setTimeout(() => {
-                copyButton.textContent = 'Copiar';
-            }, 2000);
+            setTimeout(() => { copyButton.textContent = 'Copiar'; }, 2000);
         });
         
         logoutButton.addEventListener('click', async () => {
@@ -352,7 +340,6 @@
             window.location.href = 'index.html';
         });
 
-        // --- 6. INICIALIZAÇÃO ---
         loadDashboard();
     </script>
 </body>
