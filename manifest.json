@@ -2,7 +2,7 @@
   "name": "Avalia Aí",
   "short_name": "Avalia Aí",
   "description": "Aplicativo para avaliação de atendimento.",
-  "start_url": "/avalia-ai/?utm_source=pwa",
+  "start_url": "/avaliar.html?source=pwa",
   "display": "standalone",
   "background_color": "#f3f4f6",
   "theme_color": "#4f46e5",
